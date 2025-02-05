@@ -36,8 +36,8 @@
       "name": "tscript",
       "type": "git",
       "dir": null,
-      "ref": "53121d899e65689067698dd8d865df26b0226156",
-      "url": "https://github.com/MzkX2/tscript"
+      "ref": "e4cfa80fa93bee1f52dc60ec9378cd70281061e6",
+      "url": "https://github.com/Mr7K-X/T-Script"
     },
     {
       "name": "linc_luajit",
@@ -98,8 +98,8 @@
       "name": "tjson",
       "type": "git",
       "dir": null,
-      "ref": "d4a40ea6640084f1dfb9b61e3a24e1b3ef3a6423",
-      "url": "https://github.com/MrzkTeam/tjson"
+      "ref": "62bc266ef3ce7c1010d234a47715bb490bf6b1b0",
+      "url": "https://github.com/Mr7K-X/t-json"
     },
     {
       "name": "thx.core",
