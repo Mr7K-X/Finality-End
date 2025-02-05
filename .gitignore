@@ -1,0 +1,12 @@
+export/
+dump/
+example_mods/
+logs/
+.DS_STORE
+.haxelib/
+.fordevs/
+.vs/
+.build.time
+Project.xmls
+modsList.txt
+project_test.cmd
