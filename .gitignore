@@ -6,7 +6,5 @@ logs/
 .haxelib/
 .fordevs/
 .vs/
-.build.time
-Project.xmls
-modsList.txt
-project_test.cmd
+.time
+test.bat

@@ -1,4 +1,4 @@
-package src; //i know
+package src; // i know
 
 #if sys
 import sys.FileSystem;
@@ -10,7 +10,7 @@ import sys.io.File;
  */
 class Postbuild
 {
-  static inline final BUILD_TIME_FILE:String = '.build.time';
+  static inline final BUILD_TIME_FILE:String = '.time';
 
   static function main():Void
   {
@@ -34,7 +34,7 @@ class Postbuild
 
       final timeText:String = 'BUILD TOOK: ${buildTime} SECONDS';
 
-      for(l in 0...timeText.length)
+      for (l in 0...timeText.length)
         symbol += '=';
 
       Sys.println('\n$symbol\n$timeText\n$symbol\n');

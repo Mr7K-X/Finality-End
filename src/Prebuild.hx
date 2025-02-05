@@ -10,7 +10,7 @@ import sys.FileSystem;
  */
 class Prebuild
 {
-  static final timeFile:String = '.build.time';
+  static final timeFile:String = '.time';
   static final buildPrint:String = "BUILDING...";
 
   static function main():Void
@@ -19,7 +19,7 @@ class Prebuild
 
     var symbol:String = '';
 
-    for(l in 0...buildPrint.length)
+    for (l in 0...buildPrint.length)
       symbol += '=';
 
     #if sys
