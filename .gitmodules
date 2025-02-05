@@ -1,7 +1,7 @@
 [submodule "art"]
     path = art
-    url = https://github.com/UnBound-FE/FNF-FinalityEnd-Art.git
+    url = https://github.com/Mr7K-X/Finality-End.Art.git
 
 [submodule "assets"]
     path = assets
-    url = https://github.com/UnBound-FE/FNF-FinalityEnd-Assets.git
+    url = https://github.com/Mr7K-X/Finality-End.Assets.git
