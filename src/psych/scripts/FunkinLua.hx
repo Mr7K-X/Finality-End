@@ -1251,9 +1251,7 @@ class FunkinLua
       var right_color:Null<FlxColor> = null;
       if (left != null && left != '') left_color = CoolUtil.colorFromString(left);
       if (right != null && right != '') right_color = CoolUtil.colorFromString(right);
-
-      game.healthBar.bar_1.color = left_color;
-      game.healthBar.bar_2.color = right_color;
+      game.healthBar.setColors(left_color, right_color);
     });
 
     Lua_helper.add_callback(lua, "setObjectCamera", function(obj:String, camera:String = '') {
