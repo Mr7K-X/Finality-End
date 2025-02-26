@@ -66,6 +66,14 @@ class Constants
 
   public static final SCREENSHOT_FOLDER:String = "screenshots";
 
+  #if desktop
+  public static final ALSOFT_DATA:String = "[general]\nsample=type=float32\nfrequency=48000\nperiod_size=960\nperiods=3\nstereo-mode=speakers\nstereo-encoding=uhj\nhrtf=false\ncf_level=0\nresampler=fast_bsinc24\nfront-stablizer=false\nvolume-adjust=0\noutput-limiter=false\n[decoder]\nhq-mode=false\ndistance-comp=false\nnfc=false";
+  #end
+
+  #if windows
+  public static final DPI_DIVIDE:Int = 96;
+  #end
+
   /**
    * URL DATA
    */
