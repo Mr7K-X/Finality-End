@@ -170,6 +170,6 @@ class Song
 
   public static function parseJSONshit(rawJson:String):SwagSong
   {
-    return Json.parse(rawJson).song;
+    return tjson.TJSON.parse(rawJson).song;
   }
 }

@@ -48,16 +48,27 @@ class OptionsState extends MusicBeatState
     }
   }
 
+  var camGame:FlxCamera;
+  var camStick:FlxCamera;
+
   override function create()
   {
+    camGame = initPsychCamera();
+
+    camStick = new FlxCamera();
+    camStick.bgColor.alpha = 0;
+    FlxG.cameras.add(camStick, false);
+
     if (stickerSubState != null)
     {
-      openSubState(stickerSubState);
-      stickerSubState.degenStickers();
-      // FlxG.sound.playMusic(Paths.music('freakyMenu'));
+      stickerSubState.cameras = [camStick];
+      @:privateAccess
+      stickerSubState.grpStickers.cameras = [camStick];
     }
     else
-      #if DISCORD_ALLOWED DiscordClient.instance.changePresence({details: "Options Menu"}); #end
+      Paths.clearStoredMemory();
+
+    #if DISCORD_ALLOWED DiscordClient.instance.changePresence({details: "Options Menu"}); #end
 
     var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('bgnew'));
     bg.antialiasing = ClientPrefs.data.antialiasing;
@@ -84,11 +95,17 @@ class OptionsState extends MusicBeatState
     if (ClientPrefs.data.shaders)
     {
       vcrEffect = new VcrGlitchEffect();
-      initPsychCamera().setFilters([new ShaderFilter(vcrEffect.shader)]);
+      camGame.setFilters([new ShaderFilter(vcrEffect.shader)]);
     }
 
     changeSelection();
     ClientPrefs.saveSettings();
+
+    if (stickerSubState != null)
+    {
+      openSubState(stickerSubState);
+      stickerSubState.degenStickers();
+    }
 
     super.create();
   }

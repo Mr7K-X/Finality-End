@@ -94,7 +94,7 @@ class Constants
     FlxBasePreloader.LOCAL // localhost for dev stuff
   ];
 
-  public static final GITHUB_URL:String = "https://github.com/UnBound-FE/FNF-FinalityEnd";
+  public static final GITHUB_URL:String = "https://github.com/Mr7K-X/Finality-End";
 
   /**
    * Link to download the game on Itch.io.

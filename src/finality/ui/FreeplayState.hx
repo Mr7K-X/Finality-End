@@ -23,11 +23,6 @@ typedef CharData =
   var index:Int;
 }
 
-typedef CharFile =
-{
-  var data:Array<CharData>;
-}
-
 class FreeplayState extends MusicBeatState
 {
   var songs:Array<SongMetadata> = [];
@@ -60,6 +55,7 @@ class FreeplayState extends MusicBeatState
 
   var camGame:FlxCamera;
   var camStat:FlxCamera;
+  var camStick:FlxCamera;
 
   var missingTextBG:FlxSprite;
   var missingText:FlxText;
@@ -71,7 +67,7 @@ class FreeplayState extends MusicBeatState
   var player:MusicPlayer;
 
   var char:FlxSprite;
-  var charJson:CharFile;
+  var charJson:{data:Array<CharData>};
   var blackfuck:FlxSprite;
 
   var stickerSubState:StickerSubState;
@@ -88,19 +84,28 @@ class FreeplayState extends MusicBeatState
 
   override function create()
   {
-    if (stickerSubState != null) {}
+    camGame = initPsychCamera();
+
+    camStat = new FlxCamera();
+    camStat.bgColor.alpha = 0;
+    FlxG.cameras.add(camStat, false);
+
+    camStick = new FlxCamera();
+    camStick.bgColor.alpha = 0;
+    FlxG.cameras.add(camStick, false);
+
+    if (stickerSubState != null)
+    {
+      stickerSubState.cameras = [camStick];
+      @:privateAccess
+      stickerSubState.grpStickers.cameras = [camStick];
+    }
     else
       Paths.clearStoredMemory();
 
     FlxG.sound.playMusic(Paths.music('themfreepl'), 0.0);
 
     charJson = tjson.TJSON.parse(Paths.getTextFromFile('data/freeplay.json', false));
-
-    camGame = initPsychCamera();
-
-    camStat = new FlxCamera();
-    camStat.bgColor.alpha = 0;
-    FlxG.cameras.add(camStat, false);
 
     persistentUpdate = true;
 
@@ -264,7 +269,7 @@ class FreeplayState extends MusicBeatState
     if (ClientPrefs.data.shaders)
     {
       vcrEffect = new VcrGlitchEffect();
-      initPsychCamera().setFilters([new ShaderFilter(vcrEffect.shader)]);
+      camGame.setFilters([new ShaderFilter(vcrEffect.shader)]);
     }
 
     if (stickerSubState != null)

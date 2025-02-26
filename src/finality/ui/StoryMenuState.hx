@@ -35,6 +35,9 @@ class StoryMenuState extends MusicBeatState
 
   var stickerSubState:StickerSubState;
 
+  var camGame:FlxCamera;
+  var camStick:FlxCamera;
+
   public function new(?stickers:StickerSubState = null)
   {
     super();
@@ -47,14 +50,21 @@ class StoryMenuState extends MusicBeatState
 
   override function create()
   {
+    camGame = initPsychCamera();
+
+    camStick = new FlxCamera();
+    camStick.bgColor.alpha = 0;
+    FlxG.cameras.add(camStick, false);
+
     if (stickerSubState != null)
     {
-      openSubState(stickerSubState);
-      stickerSubState.degenStickers();
-      // FlxG.sound.playMusic(Paths.music('freakyMenu'));
+      stickerSubState.cameras = [camStick];
+      @:privateAccess
+      stickerSubState.grpStickers.cameras = [camStick];
     }
     else
       Paths.clearStoredMemory();
+
     Paths.clearUnusedMemory();
 
     PlayState.isStoryMode = true;
@@ -116,7 +126,14 @@ class StoryMenuState extends MusicBeatState
     changeItem();
 
     super.create();
-    FlxG.camera.filters = [new ShaderFilter(bgShader)];
+
+    camGame.filters = [new ShaderFilter(bgShader)];
+
+    if (stickerSubState != null)
+    {
+      openSubState(stickerSubState);
+      stickerSubState.degenStickers();
+    }
   }
 
   function addWeek(name:String, iconName:String, ?isLocked:Bool = false):FlxSprite
