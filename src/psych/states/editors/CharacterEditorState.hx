@@ -2,7 +2,7 @@ package psych.states.editors;
 
 import flixel.addons.display.FlxGridOverlay;
 import haxe.Json;
-import tempo.data.TempoFileHandler;
+import tempo.net.TempoFileHandler;
 import flixel.FlxObject;
 import flixel.graphics.FlxGraphic;
 import flixel.animation.FlxAnimation;

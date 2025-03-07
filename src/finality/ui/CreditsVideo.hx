@@ -1,6 +1,5 @@
 package finality.ui;
 
-import hxcodec.flixel.FlxVideo;
 import psych.substates.StickerSubState;
 
 class CreditsVideo extends MusicBeatState
@@ -32,13 +31,7 @@ class CreditsVideo extends MusicBeatState
 
     if (FileSystem.exists(Paths.video(fileName)))
     {
-      var video:FlxVideo = new FlxVideo();
-      // Recent versions
-      video.play(Paths.video(fileName));
-      video.onEndReached.add(() -> {
-        FlxG.sound.music.fadeIn(4, 0, 0.7);
-        MusicBeatState.switchState(new MainMenuState());
-      }, true);
+      // nothing for now
     }
     else
     {

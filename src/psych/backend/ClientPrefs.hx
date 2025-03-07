@@ -151,9 +151,16 @@ class ClientPrefs
 
   public static function loadBinds():Void
   {
-    input_save.bind("controls_v3", CoolUtil.getSavePath());
-    FlxG.save.bind("funkin", CoolUtil.getSavePath());
+    input_save.bind("controls_v3", _path());
+    FlxG.save.bind("funkin", _path());
   }
+
+  /**
+   * Returning a path for `loadBinds()` function.
+   */
+  @:access(tempo.util.TempoSave)
+  inline static function _path():String
+    return '${openfl.Lib.application.meta['company']}/${tempo.util.TempoSave.validate(openfl.Lib.application.meta['file'])}';
 
   public static function loadDefaultKeys()
   {

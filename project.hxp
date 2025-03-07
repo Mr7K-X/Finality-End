@@ -26,17 +26,17 @@ class Project extends HXProject
     // Game company
     "file.company" => "UnBoundTeam",
     // Starting preloader
-    "game.preloader" => "tempo.preload.TempoPreloader",
+    "game.preloader" => "tempo.ui.preload.TempoPreloader",
     // source code
     "game.source" => "src",
     // package
     "package.name" => "com.unboundteam.finalityend",
     // Source code MAIN class
-    "main.class" => "finality.Finality",
+    "main.class" => "Finality",
     // Prebuild file path
-    "prebuild.dir" => "src/Prebuild.hx",
+    "prebuild.dir" => "building/Prebuild.hx",
     // Postbuild file path
-    "postbuild.dir" => "src/Postbuild.hx",
+    "postbuild.dir" => "building/Postbuild.hx",
   ];
 
   // NOT TOUCH, IF YOU IDK HOW THIS WORKING!!
@@ -58,6 +58,20 @@ class Project extends HXProject
   static final TOUCH_HERE_TO_PLAY:FeatureFlag = "TOUCH_HERE_TO_PLAY";
   static final CRASH_HANDLER:FeatureFlag = "CRASH_HANDLER";
   static final FORCE_DEBUG_VERSION:FeatureFlag = "FORCE_DEBUG_VERSION";
+
+  // Tempo Engine's features
+   /**
+   * `-DFEATURE_SYSTOOLS_NDLL`
+   * If this flag is enabled, a `systools` library will working and spawning a .ndll file.
+   * Recommended for target OS - `Windows`.
+   */
+  static final FEATURE_DEBUG_TRACY:FeatureFlag = "FEATURE_DEBUG_TRACY";
+
+  /**
+   * `-DFEATURE_GIT_TRACE`
+   * If this flag is enabled, git info (from `GitCommit.hx`) will push in command line.
+   * */
+  static final FEATURE_GIT_TRACE:FeatureFlag = "FEATURE_GIT_TRACE";
 
   static final DEFAULT_HAXELIBS:Array<Array<String>> = [
     ["hxp", "1.3.0"],
@@ -255,6 +269,16 @@ class Project extends HXProject
       if (this.debug) setHaxedef("HXC_DEBUG_TRACE");
     }
 
+    // Debug tracy defines
+    if (FEATURE_DEBUG_TRACY.isEnabled(this))
+    {
+      setHaxedef("HXCPP_TELEMETRY");
+      setHaxedef("HXCPP_TRACY");
+      setHaxedef("HXCPP_TRACY_MEMORY");
+      setHaxedef("HXCPP_TRACY_ON_DEMAND");
+      setHaxedef("absolute-paths");
+    }
+
     if (getTarget(Platform.LINUX)) setHaxedef("NO_PRECOMPILED_HEADERS");
 
     setHaxedef("no-deprecation-warnings");
@@ -268,10 +292,9 @@ class Project extends HXProject
     this.haxeflags.push("--macro include('finality')");
     this.haxeflags.push("--macro include('tempo')");
     this.haxeflags.push("--macro include('psych')");
-    this.haxeflags.push("--macro include('my.pack')");
     this.haxeflags.push("--macro include('flixel', true, [ 'flixel.addons.editors.spine.*', 'flixel.addons.nape.*', 'flixel.system.macros.*' ])");
 
-    this.haxeflags.push("--macro addMetadata('@:build(tempo.macro.FlxMacro.buildFlxBasic())', 'flixel.FlxBasic')");
+    this.haxeflags.push("--macro addMetadata('@:build(finality.macro.FlxMacro.buildFlxBasic())', 'flixel.FlxBasic')");
 
     this.haxeflags.push("--macro allowPackage('flash')");
   }
@@ -288,7 +311,7 @@ class Project extends HXProject
       this.haxelibs.push(new Haxelib(DEFAULT_HAXELIBS[i][0], DEFAULT_HAXELIBS[i][1]));
 
     if (this.debug) this.haxelibs.push(new Haxelib('hxcpp-debug-server'));
-    if (VIDEOS_ALLOWED.isEnabled(this)) this.haxelibs.push(new Haxelib('hxCodec', '3.0.2'));
+    if (VIDEOS_ALLOWED.isEnabled(this)) this.haxelibs.push(new Haxelib('hxvlc', '1.9.6'));
     if (DISCORD_ALLOWED.isEnabled(this)) this.haxelibs.push(new Haxelib('hxdiscord_rpc', 'git'));
     if (LUA_ALLOWED.isEnabled(this)) this.haxelibs.push(new Haxelib('linc_luajit', 'git'));
     if (HSCRIPT_ALLOWED.isEnabled(this)) this.haxelibs.push(new Haxelib('tscript', 'git'));

@@ -93,7 +93,8 @@
       "target": "windows",
       "args": [
         "-debug",
-        "-DFORCE_DEBUG_VERSION"
+        "-DFORCE_DEBUG_VERSION",
+        "-DFEATURE_DEBUG_TRACY"
       ]
     },
     {

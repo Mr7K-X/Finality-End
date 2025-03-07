@@ -2,9 +2,9 @@ package finality.ui;
 
 import finality.data.CursorPlugin;
 import psych.options.VisualsUISubState;
-import tempo.util.FileUtil;
-import tempo.util.plugins.ScreenshotPlugin;
-import tempo.util.log.CrashLog;
+import finality.util.FileUtil;
+import finality.util.plugins.ScreenshotPlugin;
+import finality.util.log.CrashLog;
 import psych.backend.Highscore;
 import psych.backend.Controls;
 import psych.backend.ClientPrefs;
@@ -77,7 +77,7 @@ class InitState extends FlxState
     }
     else
     {
-      MusicBeatState.switchState(new TitleState());
+      MusicBeatState.switchState(new MainMenuState());
     }
     #end
   }

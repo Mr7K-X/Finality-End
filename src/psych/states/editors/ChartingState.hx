@@ -1,9 +1,9 @@
 package psych.states.editors;
 
-import tempo.util.MathUtil;
-import tempo.util.DateUtil;
-import tempo.util.FileUtil;
-import tempo.data.TempoFileHandler;
+import finality.util.MathUtil;
+import finality.util.DateUtil;
+import finality.util.FileUtil;
+import tempo.net.TempoFileHandler;
 import haxe.Json;
 import haxe.format.JsonParser;
 import haxe.io.Bytes;
@@ -256,11 +256,6 @@ class ChartingState extends MusicBeatState
     nextRenderedNotes = new FlxTypedGroup<Note>();
 
     FlxG.mouse.visible = true;
-    // FlxG.save.bind('funkin', CoolUtil.getSavePath());
-
-    // addSection();
-
-    // sections = _song.notes;
 
     updateJsonData();
     currentSongName = Paths.formatToSongPath(_song.song);

@@ -160,6 +160,19 @@ class MainMenuState extends MusicBeatState
   {
     Paths.clearUnusedMemory();
 
+    #if LUA_ALLOWED
+    Mods.pushGlobalMods();
+    #end
+    Mods.loadTopMod();
+
+    if (FlxG.sound.music == null)
+    {
+      FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+      FlxG.sound.music.fadeIn(4, 0, 0.7);
+    }
+
+    Conductor.bpm = 130;
+
     if (stickerSubState != null)
     {
       openSubState(stickerSubState);
@@ -305,6 +318,8 @@ class MainMenuState extends MusicBeatState
 
   override function update(e:Float)
   {
+    if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
+
     musicVolumeFix(e);
 
     super.update(e);
@@ -518,11 +533,7 @@ class MainMenuState extends MusicBeatState
         }
 
       default:
-        FlxG.camera.fade();
-        FlxTween.tween(FlxG.camera, {zoom: 0.15}, 3, {ease: FlxEase.quadInOut});
-        FlxG.sound.play(Paths.sound('cancelMenu'));
-        selected = true;
-        MusicBeatState.switchState(new TitleState());
+        // nothing
     }
   }
 

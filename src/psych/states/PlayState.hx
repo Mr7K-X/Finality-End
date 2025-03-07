@@ -1,7 +1,7 @@
 package psych.states;
 
-import tempo.util.ColorUtil;
-import tempo.util.MathUtil;
+import finality.util.ColorUtil;
+import finality.util.MathUtil;
 import psych.backend.Highscore;
 import psych.backend.StageData;
 import psych.backend.WeekData;
@@ -31,7 +31,7 @@ import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
 #end
 #if VIDEOS_ALLOWED
-import hxcodec.flixel.FlxVideoSprite;
+import psych.objects.VideoSprite;
 #end
 import psych.objects.Note.EventNote;
 import psych.objects.*;
@@ -210,6 +210,7 @@ class PlayState extends MusicBeatState
   public var songHits:Int = 0;
   public var songMisses:Int = 0;
   public var scoreTxt:FlxText;
+  public var videoCutscene:VideoSprite = null;
 
   var timeTxt:FlxText;
   var scoreTxtTween:FlxTween;
@@ -601,6 +602,7 @@ class PlayState extends MusicBeatState
     if (ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsound');
     for (i in 1...4)
       Paths.sound('missnote$i');
+
     Paths.image('alphabet');
 
     if (PauseSubState.songName != null) Paths.music(PauseSubState.songName);
@@ -658,6 +660,9 @@ class PlayState extends MusicBeatState
     playbackRate = value;
     FlxG.animationTimeScale = value;
     Conductor.safeZoneOffset = (ClientPrefs.data.safeFrames / 60) * 1000 * value;
+    #if VIDEOS_ALLOWED
+    if (videoCutscene != null && videoCutscene.videoSprite != null) videoCutscene.videoSprite.bitmap.rate = value;
+    #end
     setOnScripts('playbackRate', playbackRate);
     #else
     playbackRate = 1.0; // ensuring -Crow
@@ -816,39 +821,64 @@ class PlayState extends MusicBeatState
     char.y += char.positionArray[1];
   }
 
-  public function startVideo(name:String)
+  public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true)
   {
     #if VIDEOS_ALLOWED
-    inCutscene = true;
+    inCutscene = !forMidSong;
+    canPause = forMidSong;
 
-    var filepath:String = Paths.video(name);
+    var foundFile:Bool = false;
+    var fileName:String = Paths.video(name);
+
     #if sys
-    if (!FileSystem.exists(filepath))
+    if (FileSystem.exists(fileName))
     #else
-    if (!OpenFlAssets.exists(filepath))
+    if (OpenFlAssets.exists(fileName))
     #end
-    {
-      FlxG.log.warn('Couldnt find video file: ' + name);
-      startAndEnd();
-      return;
-    }
+    foundFile = true;
 
-    var video:FlxVideoSprite = new FlxVideoSprite();
-    video.scrollFactor.set();
-    video.cameras = [camVideo];
-    video.play(filepath);
-    video.bitmap.onEndReached.add(() -> {
-      video.bitmap.dispose();
-      remove(video);
-      startAndEnd();
-      return;
-    }, true);
-    add(video);
+    if (foundFile)
+    {
+      videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop);
+      if (forMidSong) videoCutscene.videoSprite.bitmap.rate = playbackRate;
+
+      // Finish callback
+      if (!forMidSong)
+      {
+        function onVideoEnd()
+        {
+          if (!isDead && generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
+          {
+            moveCameraSection();
+            FlxG.camera.snapToTarget();
+          }
+          videoCutscene = null;
+          canPause = true;
+          inCutscene = false;
+          startAndEnd();
+        }
+        videoCutscene.finishCallback = onVideoEnd;
+        videoCutscene.onSkip = onVideoEnd;
+      }
+      if (GameOverSubstate.instance != null && isDead) GameOverSubstate.instance.add(videoCutscene);
+      else
+        add(videoCutscene);
+
+      if (playOnLoad) videoCutscene.play();
+      return videoCutscene;
+    }
+    #if (LUA_ALLOWED || HSCRIPT_ALLOWED)
+    else
+      addTextToDebug("Video not found: " + fileName, FlxColor.RED);
+    #else
+    else
+      FlxG.log.error("Video not found: " + fileName);
+    #end
     #else
     FlxG.log.warn('Platform not supported!');
     startAndEnd();
-    return;
     #end
+    return null;
   }
 
   function startAndEnd()
@@ -1990,6 +2020,14 @@ class PlayState extends MusicBeatState
         vocals.stop();
         opponentVocals.stop();
         FlxG.sound.music.stop();
+
+        #if VIDEOS_ALLOWED
+        if (videoCutscene != null)
+        {
+          videoCutscene.destroy();
+          videoCutscene = null;
+        }
+        #end
 
         persistentUpdate = false;
         persistentDraw = false;
@@ -3205,6 +3243,14 @@ class PlayState extends MusicBeatState
     }
     luaArray = [];
     FunkinLua.customFunctions.clear();
+    #end
+
+    #if VIDEOS_ALLOWED
+    if (videoCutscene != null)
+    {
+      videoCutscene.destroy();
+      videoCutscene = null;
+    }
     #end
 
     if (camGame.filters != null) camGame.filters = [];

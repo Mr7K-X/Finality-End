@@ -7,7 +7,7 @@ import psych.scripts.CustomSubstate;
 #if LUA_ALLOWED
 import psych.scripts.FunkinLua;
 #end
-import tempo.util.MathUtil;
+import finality.util.MathUtil;
 #if HSCRIPT_ALLOWED
 import tscript.TScript;
 

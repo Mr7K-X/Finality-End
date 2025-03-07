@@ -110,7 +110,7 @@ class ExtraFunctions
       {
         var save:FlxSave = new FlxSave();
         // folder goes unused for flixel 5 users. @BeastlyGhost
-        save.bind(name, CoolUtil.getSavePath() + '/' + folder);
+        @:privateAccess save.bind(name, ClientPrefs._path() + '/' + folder);
         PlayState.instance.modchartSaves.set(name, save);
         return;
       }

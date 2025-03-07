@@ -1,6 +1,5 @@
 package psych.options;
 
-import psych.backend.PsychSetup;
 import psych.objects.Note;
 import psych.objects.StrumNote;
 import psych.objects.Alphabet;
@@ -142,9 +141,9 @@ class VisualsUISubState extends BaseOptionsMenu
 
   public static function onChangeCounters()
   {
-    for (fps in PsychSetup.fpsVars)
+    for (fps in Setup.fpsVars)
       fps.visible = ClientPrefs.data.showFPS;
-    for (ram in PsychSetup.ramVars)
+    for (ram in Setup.ramVars)
       ram.visible = ClientPrefs.data.showRAM;
   }
 
