@@ -942,6 +942,25 @@ class CharacterEditorState extends MusicBeatState
 
     if (lastZoom != FlxG.camera.zoom) cameraZoomText.text = 'Zoom: ' + FlxMath.roundDecimal(FlxG.camera.zoom, 2) + 'x';
 
+    if (healthIcon != null)
+    {
+      if (FlxG.keys.justPressed.NUMPADONE)
+      {
+        healthIcon.changeIcon(healthIconInputText.text, true);
+        healthIcon.animation.play('idle');
+      }
+      else if (FlxG.keys.justPressed.NUMPADTWO)
+      {
+        healthIcon.changeIcon(healthIconInputText.text, true);
+        healthIcon.animation.play('lose');
+      }
+      else if (FlxG.keys.justPressed.NUMPADTHREE)
+      {
+        healthIcon.changeIcon(healthIconInputText.text, true);
+        healthIcon.animation.play('win');
+      }
+    }
+
     // CHARACTER CONTROLS
     var changedAnim:Bool = false;
     if (anims.length > 1)
