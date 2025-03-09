@@ -948,16 +948,19 @@ class CharacterEditorState extends MusicBeatState
       {
         healthIcon.changeIcon(healthIconInputText.text, true);
         healthIcon.animation.play('idle');
+        healthIcon.updateHitbox();
       }
       else if (FlxG.keys.justPressed.NUMPADTWO)
       {
         healthIcon.changeIcon(healthIconInputText.text, true);
         healthIcon.animation.play('lose');
+        healthIcon.updateHitbox();
       }
       else if (FlxG.keys.justPressed.NUMPADTHREE)
       {
         healthIcon.changeIcon(healthIconInputText.text, true);
         healthIcon.animation.play('win');
+        healthIcon.updateHitbox();
       }
     }
 
