@@ -1738,7 +1738,6 @@ class PlayState extends MusicBeatState
 
     if (healthBar.bounds.max != null && health > healthBar.bounds.max) health = healthBar.bounds.max;
 
-    updateIconsScale(elapsed);
     updateIconsPosition();
 
     if (startedCountdown && !paused) Conductor.songPosition += FlxG.elapsed * 1000 * playbackRate;
@@ -3321,9 +3320,6 @@ class PlayState extends MusicBeatState
     }
 
     if (generatedMusic) notes.sort(FlxSort.byY, ClientPrefs.data.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
-
-    iconP1.scale.set(iconP1.scale.x + .1, iconP1.scale.y + .1);
-    iconP2.scale.set(iconP2.scale.x + .1, iconP2.scale.y + .1);
 
     iconP1.updateHitbox();
     iconP2.updateHitbox();
