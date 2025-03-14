@@ -452,7 +452,7 @@ class PlayState extends MusicBeatState
       dad.setPosition(GF_X, GF_Y);
       if (gf != null) gf.visible = false;
     }
-    stagesFunc(function(stage:BaseStage) stage.createPost());
+    stagesFunc((stage:BaseStage) -> stage.createPost());
 
     comboGroup = new FlxSpriteGroup();
     add(comboGroup);
@@ -501,7 +501,7 @@ class PlayState extends MusicBeatState
     FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
     moveCameraSection();
 
-    healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', function() return health, 0, 2);
+    healthBar = new Bar(0, FlxG.height * (!ClientPrefs.data.downScroll ? 0.89 : 0.11), 'healthBar', () -> return health, 0, 2);
     healthBar.screenCenter(X);
     healthBar.leftToRight = false;
     healthBar.scrollFactor.set();
@@ -680,7 +680,7 @@ class PlayState extends MusicBeatState
     newText.alpha = 1;
     newText.setPosition(10, 8 - newText.height);
 
-    luaDebugGroup.forEachAlive(function(spr:DebugLuaText) {
+    luaDebugGroup.forEachAlive((spr:DebugLuaText) -> {
       spr.y += newText.height + 2;
     });
     luaDebugGroup.add(newText);
@@ -905,14 +905,14 @@ class PlayState extends MusicBeatState
       psychDialogue.scrollFactor.set();
       if (endingSong)
       {
-        psychDialogue.finishThing = function() {
+        psychDialogue.finishThing = () -> {
           psychDialogue = null;
           endSong();
         }
       }
       else
       {
-        psychDialogue.finishThing = function() {
+        psychDialogue.finishThing = () -> {
           psychDialogue = null;
           startCountdown();
         }
@@ -1007,7 +1007,7 @@ class PlayState extends MusicBeatState
       }
       moveCameraSection();
 
-      startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, function(tmr:FlxTimer) {
+      startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, (tmr:FlxTimer) -> {
         characterBopper(tmr.loopsLeft);
 
         var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
@@ -1044,7 +1044,7 @@ class PlayState extends MusicBeatState
             tick = START;
         }
 
-        notes.forEachAlive(function(note:Note) {
+        notes.forEachAlive((note:Note) -> {
           if (ClientPrefs.data.opponentStrums || note.mustPress)
           {
             note.copyAlpha = false;
@@ -1053,7 +1053,7 @@ class PlayState extends MusicBeatState
           }
         });
 
-        stagesFunc(function(stage:BaseStage) stage.countdownTick(tick, swagCounter));
+        stagesFunc((stage:BaseStage) -> stage.countdownTick(tick, swagCounter));
         callOnLuas('onCountdownTick', [swagCounter]);
         callOnHScript('onCountdownTick', [tick, swagCounter]);
 
@@ -1078,7 +1078,7 @@ class PlayState extends MusicBeatState
     FlxTween.tween(spr, {/*y: spr.y + 100,*/ alpha: 0}, Conductor.crochet / 1000,
       {
         ease: FlxEase.cubeInOut,
-        onComplete: function(twn:FlxTween) {
+        onComplete: (_) -> {
           remove(spr);
           spr.destroy();
         }
@@ -1267,7 +1267,10 @@ class PlayState extends MusicBeatState
       {
         details: detailsText,
         state: SONG.song + " (" + storyDifficultyText + ")",
-        smallImageKey: iconP2.getCharacter()
+        largeImageKey: Paths.formatToSongPath(SONG.song),
+        largeImageText: SONG.song,
+        smallImageKey: iconP2.getCharacter(),
+        smallImageText: dad.curCharacter
       });
     #end
     setOnScripts('songLength', songLength);
@@ -1359,7 +1362,7 @@ class PlayState extends MusicBeatState
       return;
     }
 
-    stagesFunc(function(stage:BaseStage) stage.eventPushed(event));
+    stagesFunc((stage:BaseStage) -> stage.eventPushed(event));
     eventsPushed.push(event.event);
   }
 
@@ -1388,7 +1391,7 @@ class PlayState extends MusicBeatState
       case 'Play Sound':
         Paths.sound(event.value1); // Precache sound
     }
-    stagesFunc(function(stage:BaseStage) stage.eventPushedUnique(event));
+    stagesFunc((stage:BaseStage) -> stage.eventPushedUnique(event));
   }
 
   function eventEarlyTrigger(event:EventNote):Float
@@ -1576,7 +1579,7 @@ class PlayState extends MusicBeatState
 
   override function openSubState(SubState:FlxSubState)
   {
-    stagesFunc(function(stage:BaseStage) stage.openSubState(SubState));
+    stagesFunc((stage:BaseStage) -> stage.openSubState(SubState));
     if (paused)
     {
       if (FlxG.sound.music != null)
@@ -1585,8 +1588,8 @@ class PlayState extends MusicBeatState
         vocals.pause();
         opponentVocals.pause();
       }
-      FlxTimer.globalManager.forEach(function(tmr:FlxTimer) if (!tmr.finished) tmr.active = false);
-      FlxTween.globalManager.forEach(function(twn:FlxTween) if (!twn.finished) twn.active = false);
+      FlxTimer.globalManager.forEach((t:FlxTimer) -> if (!t.finished) t.active = false);
+      FlxTween.globalManager.forEach((t:FlxTween) -> if (!t.finished) t.active = false);
     }
 
     super.openSubState(SubState);
@@ -1596,15 +1599,15 @@ class PlayState extends MusicBeatState
   {
     super.closeSubState();
 
-    stagesFunc(function(stage:BaseStage) stage.closeSubState());
+    stagesFunc((s:BaseStage) -> s.closeSubState());
     if (paused)
     {
       if (FlxG.sound.music != null && !startingSong)
       {
         resyncVocals();
       }
-      FlxTimer.globalManager.forEach(function(tmr:FlxTimer) if (!tmr.finished) tmr.active = true);
-      FlxTween.globalManager.forEach(function(twn:FlxTween) if (!twn.finished) twn.active = true);
+      FlxTimer.globalManager.forEach((t:FlxTimer) -> if (!t.finished) t.active = true);
+      FlxTween.globalManager.forEach((t:FlxTween) -> if (!t.finished) t.active = true);
 
       paused = false;
       callOnScripts('onResume');
@@ -1625,7 +1628,10 @@ class PlayState extends MusicBeatState
       {
         details: detailsPausedText,
         state: SONG.song + " (" + storyDifficultyText + ")",
-        smallImageKey: iconP2.getCharacter()
+        largeImageKey: Paths.formatToSongPath(SONG.song),
+        largeImageText: SONG.song,
+        smallImageKey: iconP2.getCharacter(),
+        smallImageText: dad.curCharacter
       });
     #end
 
@@ -1644,10 +1650,21 @@ class PlayState extends MusicBeatState
       {
         details: detailsText,
         state: SONG.song + " (" + storyDifficultyText + ")",
-        smallImageKey: iconP2.getCharacter()
+        largeImageKey: Paths.formatToSongPath(SONG.song),
+        largeImageText: SONG.song,
+        smallImageKey: iconP2.getCharacter(),
+        smallImageText: dad.curCharacter
       });
     else
-      DiscordClient.instance.changePresence({details: detailsText, state: SONG.song + " (" + storyDifficultyText + ")", smallImageKey: iconP2.getCharacter()});
+      DiscordClient.instance.changePresence(
+        {
+          details: detailsText,
+          state: SONG.song + " (" + storyDifficultyText + ")",
+          largeImageKey: Paths.formatToSongPath(SONG.song),
+          largeImageText: SONG.song,
+          smallImageKey: iconP2.getCharacter(),
+          smallImageText: dad.curCharacter
+        });
     #end
   }
 
@@ -1850,7 +1867,7 @@ class PlayState extends MusicBeatState
       if (startedCountdown)
       {
         var fakeCrochet:Float = (60 / SONG.bpm) * 1000;
-        notes.forEachAlive(function(daNote:Note) {
+        notes.forEachAlive((daNote:Note) -> {
           var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
           if (!daNote.mustPress) strumGroup = opponentStrums;
 
@@ -1880,7 +1897,7 @@ class PlayState extends MusicBeatState
       }
       else
       {
-        notes.forEachAlive(function(daNote:Note) {
+        notes.forEachAlive((daNote:Note) -> {
           daNote.canBeHit = false;
           daNote.wasGoodHit = false;
         });
@@ -1972,7 +1989,10 @@ class PlayState extends MusicBeatState
       {
         details: detailsPausedText,
         state: SONG.song + " (" + storyDifficultyText + ")",
-        smallImageKey: iconP2.getCharacter()
+        largeImageKey: Paths.formatToSongPath(SONG.song),
+        largeImageText: SONG.song,
+        smallImageKey: iconP2.getCharacter(),
+        smallImageText: dad.curCharacter
       });
     #end
   }
@@ -2049,7 +2069,10 @@ class PlayState extends MusicBeatState
           {
             details: "Game Over - " + detailsText,
             state: SONG.song + " (" + storyDifficultyText + ")",
-            smallImageKey: iconP2.getCharacter()
+            largeImageKey: Paths.formatToSongPath(SONG.song),
+            largeImageText: SONG.song,
+            smallImageKey: iconP2.getCharacter(),
+            smallImageText: dad.curCharacter
           });
         #end
         isDead = true;
@@ -2310,7 +2333,7 @@ class PlayState extends MusicBeatState
             songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, flValue2 / playbackRate,
               {
                 ease: FlxEase.linear,
-                onComplete: function(twn:FlxTween) {
+                onComplete: (_) -> {
                   songSpeedTween = null;
                 }
               });
@@ -2345,7 +2368,7 @@ class PlayState extends MusicBeatState
         FlxG.sound.play(Paths.sound(value1), flValue2);
     }
 
-    stagesFunc(function(stage:BaseStage) stage.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
+    stagesFunc((s:BaseStage) -> s.eventCalled(eventName, value1, value2, flValue1, flValue2, strumTime));
     callOnScripts('onEvent', [eventName, value1, value2, strumTime]);
   }
 
@@ -2393,7 +2416,7 @@ class PlayState extends MusicBeatState
         cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000),
           {
             ease: FlxEase.elasticInOut,
-            onComplete: function(twn:FlxTween) {
+            onComplete: (_) -> {
               cameraTwn = null;
             }
           });
@@ -2408,7 +2431,7 @@ class PlayState extends MusicBeatState
       cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000),
         {
           ease: FlxEase.elasticInOut,
-          onComplete: function(twn:FlxTween) {
+          onComplete: (_) -> {
             cameraTwn = null;
           }
         });
@@ -2431,7 +2454,7 @@ class PlayState extends MusicBeatState
     }
     else
     {
-      finishTimer = new FlxTimer().start(ClientPrefs.data.noteOffset / 1000, function(tmr:FlxTimer) {
+      finishTimer = new FlxTimer().start(ClientPrefs.data.noteOffset / 1000, (_) -> {
         endCallback();
       });
     }
@@ -2444,7 +2467,7 @@ class PlayState extends MusicBeatState
     // Should kill you if you tried to cheat
     if (!startingSong)
     {
-      notes.forEach(function(daNote:Note) {
+      notes.forEach((daNote:Note) -> {
         if (daNote.strumTime < songLength - Conductor.safeZoneOffset)
         {
           health -= 0.05 * healthLoss;
@@ -2725,7 +2748,7 @@ class PlayState extends MusicBeatState
 
       FlxTween.tween(numScore, {alpha: 0}, 0.2 / playbackRate,
         {
-          onComplete: function(tween:FlxTween) {
+          onComplete: (_) -> {
             numScore.destroy();
           },
           startDelay: Conductor.crochet * 0.002 / playbackRate
@@ -2742,7 +2765,7 @@ class PlayState extends MusicBeatState
 
     FlxTween.tween(comboSpr, {alpha: 0}, 0.2 / playbackRate,
       {
-        onComplete: function(tween:FlxTween) {
+        onComplete: (_) -> {
           comboSpr.destroy();
           rating.destroy();
         },
@@ -2794,7 +2817,7 @@ class PlayState extends MusicBeatState
     if (Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
 
     // obtain notes that the player can hit
-    var plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
+    var plrInputNotes:Array<Note> = notes.members.filter((n:Note) -> {
       var canHit:Bool = !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
       return n != null && canHit && !n.isSustainNote && n.noteData == key;
     });
@@ -2944,7 +2967,7 @@ class PlayState extends MusicBeatState
   function noteMiss(daNote:Note):Void
   { // You didn't hit the key and let it go offscreen, also used by Hurt Notes
     // Dupe note remove
-    notes.forEachAlive(function(note:Note) {
+    notes.forEachAlive((note:Note) -> {
       if (daNote != note
         && daNote.mustPress
         && daNote.noteData == note.noteData

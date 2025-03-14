@@ -5,7 +5,6 @@ import flixel.util.FlxDestroyUtil;
 import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import haxe.Json;
-import psych.backend.animation.PsychAnimationController;
 import psych.backend.Song;
 
 typedef CharacterFile =
@@ -81,7 +80,7 @@ class Character extends FlxSprite
   {
     super(x, y);
 
-    animation = new PsychAnimationController(this);
+    animation = new TempoAnimationController(this);
 
     animOffsets = new Map<String, Array<Dynamic>>();
     curCharacter = character;

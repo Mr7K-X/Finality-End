@@ -44,7 +44,7 @@ class FPS extends openfl.text.TextField
     times = [];
 
     #if flash
-    addEventListener(openfl.events.Event.ENTER_FRAME, function(e) {
+    addEventListener(openfl.events.Event.ENTER_FRAME, (e) -> {
       var time = Lib.getTimer();
       __enterFrame(time - currentTime);
     });

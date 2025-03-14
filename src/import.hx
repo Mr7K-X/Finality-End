@@ -4,6 +4,7 @@ import finality.shaders.VCRShader;
 #if DISCORD_ALLOWED
 import finality.api.DiscordClient;
 #end
+import tempo.animation.TempoAnimationController;
 // Psych
 #if LUA_ALLOWED
 import llua.*;

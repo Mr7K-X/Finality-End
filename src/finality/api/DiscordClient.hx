@@ -10,7 +10,7 @@ import Sys.sleep;
 
 class DiscordClient
 {
-  private inline static final DEFAULT_ID:String = "1270730583278096475";
+  private inline static final DEFAULT_ID:String = "1350068406509895721";
 
   public static var clientID(default, set):String = DEFAULT_ID;
   public static var instance(get, never):DiscordClient;
@@ -89,7 +89,7 @@ class DiscordClient
     presence.details = cast(params.details, Null<String>);
     presence.state = cast(params.state, Null<String>);
     presence.largeImageText = cast(params.largeImageText, Null<String>) ?? Constants.VERSION;
-    presence.largeImageKey = cast(params.largeImageKey, Null<String>) ?? "logo";
+    presence.largeImageKey = cast(params.largeImageKey, Null<String>) ?? "icon";
     presence.smallImageText = cast(params.smallImageText, Null<String>);
     presence.smallImageKey = cast(params.smallImageKey, Null<String>);
 

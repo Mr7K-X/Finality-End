@@ -1,5 +1,6 @@
 package finality.ui;
 
+import finality.util.plugins.ShaderFixPlugin;
 import finality.data.CursorPlugin;
 import psych.options.VisualsUISubState;
 import finality.util.FileUtil;
@@ -56,6 +57,7 @@ class InitState extends FlxState
     CursorPlugin.init();
 
     ScreenshotPlugin.initialize();
+    ShaderFixPlugin.initialize();
 
     #if DISCORD_ALLOWED
     DiscordClient.prepare();

@@ -53,23 +53,5 @@ class Setup
     for (ramVar in ramVars)
       Finality.instance.addChild(ramVar);
     #end
-
-    #if !flash
-    FlxG.signals.gameResized.add((w:Int, h:Int) -> {
-      if (FlxG.cameras != null) for (camera in FlxG.cameras.list)
-        if (camera != null && camera.filters != null) _sprite_resetCache(camera.flashSprite);
-
-      if (FlxG.game != null) _sprite_resetCache(FlxG.game);
-    });
-    #end
   }
-
-  #if !flash
-  @:access(openfl.display.Sprite)
-  static function _sprite_resetCache(spr:openfl.display.Sprite):Void
-  {
-    spr.__cacheBitmap = null;
-    spr.__cacheBitmapData = null;
-  }
-  #end
 }
