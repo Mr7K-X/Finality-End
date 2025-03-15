@@ -10,7 +10,7 @@ import Sys.sleep;
 
 class DiscordClient
 {
-  private inline static final DEFAULT_ID:String = "1350068406509895721";
+  private inline static final DEFAULT_ID:String = "1270730583278096475";
 
   public static var clientID(default, set):String = DEFAULT_ID;
   public static var instance(get, never):DiscordClient;
