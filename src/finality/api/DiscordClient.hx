@@ -88,19 +88,19 @@ class DiscordClient
 
     presence.details = cast(params.details, Null<String>);
     presence.state = cast(params.state, Null<String>);
-    presence.largeImageText = cast(params.largeImageText, Null<String>) ?? Constants.VERSION;
+    presence.largeImageText = cast(params.largeImageText, Null<String>) ?? Constants.TITLE;
     presence.largeImageKey = cast(params.largeImageKey, Null<String>) ?? "icon";
     presence.smallImageText = cast(params.smallImageText, Null<String>);
     presence.smallImageKey = cast(params.smallImageKey, Null<String>);
 
     final button1:DiscordButton = DiscordButton.create();
     button1.label = "Game Page";
-    button1.url = "https://gamebanana.com/mods/538437";
+    button1.url = Constants.GAMEBANANA_URL;
     presence.buttons[0] = button1;
 
     final button2:DiscordButton = DiscordButton.create();
     button2.label = "Discord server";
-    button2.url = "https://discord.gg/HvgydnkC8C";
+    button2.url = Constants.DISCORD_URL;
     presence.buttons[1] = button2;
 
     return presence;

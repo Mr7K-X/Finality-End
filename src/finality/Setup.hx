@@ -29,6 +29,10 @@ class Setup
     }
     #end
 
+    #if cpp
+    tempo.util.TempoSystem.get_OS_info();
+    #end
+
     #if FEATURE_DEBUG_TRACY
     WindowsUtil.initDebugTracy();
     #end
