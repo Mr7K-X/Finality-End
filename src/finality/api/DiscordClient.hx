@@ -99,7 +99,7 @@ class DiscordClient
     presence.buttons[0] = button1;
 
     final button2:DiscordButton = DiscordButton.create();
-    button2.label = "Discord server";
+    button2.label = "Funkin' Mods";
     button2.url = Constants.DISCORD_URL;
     presence.buttons[1] = button2;
 

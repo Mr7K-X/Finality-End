@@ -106,7 +106,7 @@ class Constants
 
   public static final GAMEBANANA_URL:String = "https://gamebanana.com/mods/538437";
 
-  public static final DISCORD_URL:String = "https://discord.gg/HvgydnkC8C";
+  public static final DISCORD_URL:String = "https://discord.gg/HfZhsBBAyw";
 
   public static final GITHUB_URL:String = "https://github.com/Mr7K-X/Finality-End";
 
