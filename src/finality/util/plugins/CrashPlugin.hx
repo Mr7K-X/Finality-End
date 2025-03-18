@@ -1,4 +1,4 @@
-package finality.util.log;
+package finality.util.plugins;
 
 #if CRASH_HANDLER
 import finality.api.DiscordClient;
@@ -15,7 +15,7 @@ import flixel.FlxG;
  * `NULL OBJECT REFERENCE` and etc.
  */
 @:nullSafety
-class CrashLog
+class CrashPlugin
 {
   /**
    * Initialize a crash dialog.
@@ -145,7 +145,7 @@ class CrashLog
 }
 
 @:keep
-@:access(engine.util.log.CrashLog)
+@:access(engine.util.plugins.CrashPlugin)
 private class CrashReference
 {
   static var file:String = "";
@@ -208,7 +208,7 @@ private class CrashReference
 
     file = "tempo-crash" + (c ? '-critical' : '') + '-' + DateUtil.generateTimestamp();
 
-    sys.io.File.saveContent('./logs/$file.log', CrashLog.createContent(e));
+    sys.io.File.saveContent('./logs/$file.log', CrashPlugin.createContent(e));
   }
   #end
 

@@ -107,7 +107,7 @@ class Project extends HXProject
 
   function flair()
   {
-    info("\nFinality End: DELUXE (Based on Psych and Tempo Engine's)");
+    info("\nFinality End: Nightmare Awaking (Based on Psych and Tempo Engine's)");
     info("Initializing build...\n");
 
     info("Project Version: " + METADATA.get('file.version'));

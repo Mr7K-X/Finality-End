@@ -1,11 +1,8 @@
 package finality.ui;
 
-import finality.util.plugins.ShaderFixPlugin;
-import finality.data.CursorPlugin;
 import psych.options.VisualsUISubState;
 import finality.util.FileUtil;
-import finality.util.plugins.ScreenshotPlugin;
-import finality.util.log.CrashLog;
+import finality.util.plugins.*;
 import psych.backend.Highscore;
 import psych.backend.Controls;
 import psych.backend.ClientPrefs;
@@ -25,7 +22,7 @@ class InitState extends FlxState
   override function create():Void
   {
     #if CRASH_HANDLER
-    CrashLog.init();
+    CrashPlugin.init();
     #end
 
     #if debug
