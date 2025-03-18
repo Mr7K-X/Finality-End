@@ -1,6 +1,7 @@
 package tempo.ui.preload;
 
 // openfl import
+import finality.util.WindowsUtil;
 import openfl.Lib;
 import openfl.text.TextFormatAlign;
 import openfl.text.TextFormat;
@@ -204,7 +205,7 @@ class TempoPreloader extends flixel.system.FlxBasePreloader
     fnfText.height = 40;
     fnfText.x = 155;
     fnfText.y = -6.5;
-    fnfText.text = 'FNF';
+    fnfText.text = 'FENA';
     box.addChild(fnfText);
 
     tempoText.selectable = false;
@@ -248,6 +249,10 @@ class TempoPreloader extends flixel.system.FlxBasePreloader
     touchHereSprite.buttonMode = false;
     touchHereSprite.addChild(touchHereToPlay);
     addChild(touchHereSprite);
+    #end
+
+    #if windows
+    WindowsUtil.goAheadIco();
     #end
   }
 
@@ -409,7 +414,7 @@ class TempoPreloader extends flixel.system.FlxBasePreloader
         dspText.textColor = 0x000000;
 
         fnfText.defaultTextFormat = new TextFormat(Paths.font("Quantico-Regular.ttf"), 20, 0x000000, false);
-        fnfText.text = 'FNF';
+        fnfText.text = 'FENA';
         fnfText.textColor = 0x000000;
 
         tempoText.defaultTextFormat = new TextFormat(Paths.font("Quantico-Regular.ttf"), 20, 0x000000, false);

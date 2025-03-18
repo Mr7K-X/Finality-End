@@ -36,6 +36,9 @@ typedef NoteSplashData =
 **/
 class Note extends FlxSprite
 {
+  public static final TYPES_LIST:Array<String> = // Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
+    ['', 'Alt Animation', 'Hey!', 'Hurt Note', 'GF Sing', 'No Animation'];
+
   public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
 
   public var strumTime:Float = 0;

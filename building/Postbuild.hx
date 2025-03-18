@@ -32,7 +32,7 @@ class Postbuild
       var buildTime:Float = roundToTwoDecimals(end - start);
       var symbol:String = '';
 
-      final timeText:String = 'BUILD TOOK: ${buildTime} SECONDS';
+      final timeText:String = '| BUILD TOOK: ${buildTime} SECONDS |';
 
       for (l in 0...timeText.length)
         symbol += '=';

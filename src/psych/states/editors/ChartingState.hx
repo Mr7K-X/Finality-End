@@ -44,15 +44,13 @@ import openfl.media.Sound;
 @:access(openfl.media.Sound.__buffer)
 class ChartingState extends MusicBeatState
 {
-  public static var noteTypeList:Array<String> = // Used for backwards compatibility with 0.1 - 0.3.2 charts, though, you should add your hardcoded custom note types here too.
-    ['', 'Alt Animation', 'Hey!', 'Hurt Note', 'GF Sing', 'No Animation'];
-
   public var ignoreWarnings = false;
 
   var curNoteTypes:Array<String> = [];
   var undos = [];
   var redos = [];
-  var eventStuff:Array<Dynamic> = [
+
+  final eventStuff:Array<Dynamic> = [
     ['', "Nothing. Yep, that's right."],
     [
       'Hey!',
@@ -189,6 +187,8 @@ class ChartingState extends MusicBeatState
 
   override function create()
   {
+    openfl.Lib.application.window.setIcon(lime.graphics.Image.fromFile('assets/engine/ui/icon-1.tsg'));
+
     if (PlayState.SONG != null) _song = PlayState.SONG;
     else
     {
@@ -200,11 +200,11 @@ class ChartingState extends MusicBeatState
           events: [],
           bpm: 150.0,
           needsVoices: true,
-          player1: 'bf',
-          player2: 'dad',
-          gfVersion: 'gf',
+          player1: 'bffreak',
+          player2: 'bffreak',
+          gfVersion: 'bffreak',
           speed: 1,
-          stage: 'stage'
+          stage: '22'
         };
     }
 
@@ -692,7 +692,7 @@ class ChartingState extends MusicBeatState
     }
     #end
 
-    if (stages.length < 1) stages.push('stage');
+    if (stages.length < 1) stages.push('22');
 
     stageDropDown = new FlxUIDropDownMenu(player1DropDown.x + 140, player1DropDown.y, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true),
       function(character:String) {
@@ -1023,9 +1023,9 @@ class ChartingState extends MusicBeatState
     blockPressWhileTypingOn.push(strumTimeInputText);
 
     var key:Int = 0;
-    while (key < noteTypeList.length)
+    while (key < Note.TYPES_LIST.length)
     {
-      curNoteTypes.push(noteTypeList[key]);
+      curNoteTypes.push(Note.TYPES_LIST[key]);
       key++;
     }
 
@@ -2006,6 +2006,8 @@ class ChartingState extends MusicBeatState
         if (vocals != null) vocals.stop();
         if (opponentVocals != null) opponentVocals.stop();
 
+        openfl.Lib.application.window.setIcon(lime.graphics.Image.fromFile('Resource/ico/x16.png'));
+
         // if(_song.stage == null) _song.stage = stageDropDown.selectedLabel;
         StageData.loadDirectory(_song);
         LoadingState.loadAndSwitchState(new PlayState());
@@ -2027,6 +2029,7 @@ class ChartingState extends MusicBeatState
       {
         // Protect against lost data when quickly leaving the chart editor.
         autosaveSong();
+        openfl.Lib.application.window.setIcon(lime.graphics.Image.fromFile('Resource/ico/x16.png'));
         PlayState.chartingMode = false;
         MusicBeatState.switchState(new psych.states.editors.MasterEditorMenu());
         FlxG.sound.playMusic(Paths.music('freakyMenu'));

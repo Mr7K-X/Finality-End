@@ -3,6 +3,7 @@ package;
 import hxp.*;
 import lime.tools.*;
 import sys.FileSystem;
+import sys.io.Process;
 
 using StringTools;
 
@@ -106,14 +107,15 @@ class Project extends HXProject
 
   function flair()
   {
-    info("Finality End: DELUXE (Based on Psych and Tempo Engine)");
-    info("Initializing build...");
+    info("\nFinality End: DELUXE (Based on Psych and Tempo Engine's)");
+    info("Initializing build...\n");
 
-    info("Version:      " + METADATA.get('version'));
-    info("Git Branch:   " + getGitBranch());
-    info("Git Commit:   " + getGitCommit());
-    info("Git Modified? " + getGitModified());
-    info("Display?      " + getCommand('display'));
+    info("Project Version: " + METADATA.get('file.version'));
+    info("Git Branch:      " + getGitBranch());
+    info("Git Commit:      " + getGitCommit());
+    info("Git Modified?    " + getGitModified());
+    info("Display?         " + getCommand('display'));
+    info('\n');
   }
 
   function displayTarget()
@@ -178,6 +180,8 @@ class Project extends HXProject
           Log.error('Unsupported architecture (got ${arch})');
       }
     }
+
+    info('\n');
   }
 
   function configureApp():Void
@@ -224,6 +228,7 @@ class Project extends HXProject
   function configureFeatureFlags():Void
   {
     GITHUB_BUILD.apply(this, true);
+    FEATURE_GIT_TRACE.apply(this, false);
 
     MODS_ALLOWED.apply(this, getPlatform(PlatformType.DESKTOP));
     HSCRIPT_ALLOWED.apply(this, getPlatform(PlatformType.DESKTOP));
@@ -330,9 +335,9 @@ class Project extends HXProject
     var willPreload = PRELOAD_ALL.isEnabled(this);
     var willEmbed = EMBED_ASSETS.isEnabled(this);
 
-    if (willEmbed) info('Embedding assets into executable...');
+    if (willEmbed) info('\nEmbedding assets into executable...\n');
     else
-      info('Including assets alongside executable...');
+      info('\nIncluding assets alongside executable...\n');
 
     var willPreloadDefault = true;
 
@@ -342,6 +347,9 @@ class Project extends HXProject
 
     addAssetLibrary("songs", willEmbed, willPreload);
     addAssetPath("assets/songs", "assets/songs", "songs", ['*'], exclude, willEmbed);
+
+    addAssetLibrary('engine', willEmbed, willPreload);
+    addAssetPath("assets/engine", "assets/engine", "engine", ['*'], exclude, willEmbed);
 
     addAssetLibrary("embed", !getTarget(Platform.LINUX), willPreload);
     addAssetPath("assets/embed", "assets/embed", "embed", ['*'], exclude, !getTarget(Platform.LINUX));
@@ -354,6 +362,11 @@ class Project extends HXProject
 
     if (getTarget(Platform.WINDOWS))
       addAssetPath('crash-dialog', '', "default", ['*'],  exclude, false);
+
+    addAsset("art/icon16.png", "Resource/ico/x16.png", "default", false);
+    addAsset("art/icon32.png", "Resource/ico/x32.png", "default", false);
+    addAsset("art/icon64.png", "Resource/ico/x64.png", "default", false);
+    addAsset("art/iconOG.png", "Resource/ico/OG.png", "default", false);
 
     addAsset("art/readme.txt", "do NOT readme.txt", "default", false);
     addAsset("LICENSE", "LICENSE.md", "default", false);
@@ -423,9 +436,12 @@ class Project extends HXProject
     this.libraries.push(new Library(s, n, null, e, p, false, ''));
   }
 
+  /**
+   * Returning current `Git` branch
+   */
   public function getGitBranch():String
   {
-    var process = new sys.io.Process("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
+    var process = new Process("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
     if (process.exitCode() != 0)
     {
       var msg = process.stderr.readAll().toString();
@@ -436,24 +452,32 @@ class Project extends HXProject
     return name;
   }
 
+  /**
+   * Returning current `Git` commit
+   */
   public function getGitCommit():String
   {
-    var process = new sys.io.Process("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
+    var process = new Process('git', ['rev-parse', 'HEAD']);
     if (process.exitCode() != 0)
     {
-      var msg = process.stderr.readAll().toString();
-      Log.error("Could not determine current git branch; is this a proper Git repository?");
+      var message = process.stderr.readAll().toString();
+      Log.error('Could not determine current git commit; is this a proper Git repository?');
     }
 
-    var hash:String = process.stdout.readLine();
-    var hashSplice:String = hash.substr(0, 7);
+    // read the output of the process
+    var commitHash:String = process.stdout.readLine();
+    var commitHashSplice:String = commitHash.substr(0, 7);
 
-    return hashSplice;
+    // Generates a string expression
+    return commitHashSplice;
   }
 
+  /**
+   * Returning current `Git` branch is modified or not.
+   */
   public function getGitModified():Bool
   {
-    var process = new sys.io.Process("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
+    var process = new Process("git", ["rev-parse", "--abbrev-ref", "HEAD"]);
     if (process.exitCode() != 0)
     {
       var msg = process.stderr.readAll().toString();

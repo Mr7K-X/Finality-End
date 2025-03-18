@@ -37,6 +37,10 @@ class Setup
     WindowsUtil.initDebugTracy();
     #end
 
+    #if windows
+    WindowsUtil.setWindowColorMode(DARK);
+    #end
+
     WindowsUtil.initWindowExitDispatch();
 
     flixel.FlxSprite.defaultAntialiasing = true;

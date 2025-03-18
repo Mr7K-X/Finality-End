@@ -11,7 +11,7 @@ import sys.FileSystem;
 class Prebuild
 {
   static final timeFile:String = '.time';
-  static final buildPrint:String = "BUILDING...";
+  static final buildPrint:String = "| BUILDING... |";
 
   static function main():Void
   {

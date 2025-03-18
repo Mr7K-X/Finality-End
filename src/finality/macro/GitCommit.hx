@@ -22,7 +22,9 @@ class GitCommit
     var commitHash:String = process.stdout.readLine();
     var commitHashSplice:String = commitHash.substr(0, 7);
 
+    #if FEATURE_GIT_TRACE
     Sys.println('Git Commit ID: ${commitHashSplice}');
+    #end
 
     // Generates a string expression
     return macro $v{commitHashSplice};
@@ -51,7 +53,10 @@ class GitCommit
     }
 
     var branchName:String = branchProcess.stdout.readLine();
+
+    #if FEATURE_GIT_TRACE
     Sys.println('Git Branch Name: ${branchName}\n');
+    #end
 
     // Generates a string expression
     return macro $v{branchName};
@@ -97,7 +102,10 @@ class GitCommit
         throw e;
       }
     }
+
+    #if FEATURE_GIT_TRACE
     Sys.println('Git Status Output: ${output}');
+    #end
 
     // Generates a string expression
     return macro $v{output.length > 0};
