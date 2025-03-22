@@ -86,11 +86,9 @@ class EditorPlayState extends MusicBeatSubstate
     if (ClientPrefs.data.hitsoundVolume > 0) Paths.sound('hitsound');
 
     /* setting up Editor PlayState stuff */
-    var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+    var bg:FlxSprite = new FlxSprite().makeGraphic(1280, 720, FlxColor.fromString('0x130B2B'));
     bg.antialiasing = ClientPrefs.data.antialiasing;
     bg.scrollFactor.set();
-    bg.color = 0xFF101010;
-    bg.alpha = 0.9;
     add(bg);
 
     /**** NOTES ****/

@@ -60,25 +60,7 @@ class InitState extends FlxState
     DiscordClient.prepare();
     #end
 
-    #if FREEPLAY
-    MusicBeatState.switchState(new FreeplayState());
-    trace('GO TO FREEPLAY!');
-    #elseif CHARTING
-    MusicBeatState.switchState(new ChartingState());
-    trace('GO TO CHART EDITOR!');
-    #else
-    if (FlxG.save.data.flashing == null && !psych.states.FlashingState.leftState)
-    {
-      FlxTransitionableState.skipNextTransIn = true;
-      FlxTransitionableState.skipNextTransOut = true;
-      MusicBeatState.switchState(new psych.states.FlashingState());
-      trace('GO TO FLASHING LIGHT WARNING MENU!');
-    }
-    else
-    {
-      MusicBeatState.switchState(new MainMenuState());
-    }
-    #end
+    MusicBeatState.switchState(new FinalityMenu());
   }
 
   override function update(elapsed:Float):Void

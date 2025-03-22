@@ -110,6 +110,8 @@ class Constants
 
   public static final GITHUB_URL:String = "https://github.com/Mr7K-X/Finality-End";
 
+  public static final MENU_THEME_BPM:Float = 130.00;
+
   /**
    * Link to download the game on Itch.io.
    */

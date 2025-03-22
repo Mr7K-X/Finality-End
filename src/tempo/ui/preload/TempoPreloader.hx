@@ -203,7 +203,7 @@ class TempoPreloader extends flixel.system.FlxBasePreloader
     fnfText.textColor = 0x000000;
     fnfText.width = this._width;
     fnfText.height = 40;
-    fnfText.x = 147.5;
+    fnfText.x = 155;
     fnfText.y = -6.5;
     fnfText.text = 'FENA';
     box.addChild(fnfText);

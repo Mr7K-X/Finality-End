@@ -422,7 +422,7 @@ class FreeplayState extends MusicBeatState
         FlxG.sound.play(Paths.sound('cancelMenu'));
         FlxG.camera.fade();
         FlxTween.tween(FlxG.camera, {zoom: 0.15}, 3, {ease: FlxEase.quadInOut});
-        MusicBeatState.switchState(new MainMenuState());
+        MusicBeatState.switchState(new FinalityMenu());
       }
     }
     else if (FlxG.keys.justPressed.SPACE)

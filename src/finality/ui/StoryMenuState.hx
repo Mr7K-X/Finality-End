@@ -199,7 +199,7 @@ class StoryMenuState extends MusicBeatState
         selectedWeek = true;
 
         FlxG.sound.play(Paths.sound('cancelMenu'));
-        MusicBeatState.switchState(new MainMenuState());
+        MusicBeatState.switchState(new FinalityMenu());
       }
     }
     super.update(elapsed);

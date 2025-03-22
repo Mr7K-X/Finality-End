@@ -31,9 +31,9 @@ class MasterEditorMenu extends MusicBeatState
     DiscordClient.instance.changePresence({details: "Editors Main Menu"});
     #end
 
-    var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+    var bg:FlxSprite = new FlxSprite().makeGraphic(1280, 720, FlxColor.fromString('0x130B2B'));
+    bg.antialiasing = ClientPrefs.data.antialiasing;
     bg.scrollFactor.set();
-    bg.color = 0xFF353535;
     add(bg);
 
     grpTexts = new FlxTypedGroup<Alphabet>();
@@ -96,7 +96,7 @@ class MasterEditorMenu extends MusicBeatState
 
     if (controls.BACK)
     {
-      MusicBeatState.switchState(new MainMenuState());
+      MusicBeatState.switchState(new finality.ui.FinalityMenu());
     }
 
     if (controls.ACCEPT)

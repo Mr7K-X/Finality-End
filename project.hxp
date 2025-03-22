@@ -242,7 +242,9 @@ class Project extends HXProject
 
     FORCE_DEBUG_VERSION.apply(this, GITHUB_BUILD.isEnabled(this) && this.debug);
 
-    TOUCH_HERE_TO_PLAY.apply(this, true); // vurado doebando want this, idk why  ~mrzk
+    if (!this.debug)
+      TOUCH_HERE_TO_PLAY.apply(this, true); // vurado doebando want this, idk why  ~mrzk
+
     CRASH_HANDLER.apply(this, true);
   }
 
@@ -258,7 +260,6 @@ class Project extends HXProject
     setHaxedef("hscriptPos");
     setHaxedef("safeMode");
 
-    setHaxedef('FLX_NO_DEBUG');
     setHaxedef("FLX_NO_FOCUS_LOST_SCREEN");
 
     if (!this.debug) setHaxedef("NAPE_RELEASE_BUILD");

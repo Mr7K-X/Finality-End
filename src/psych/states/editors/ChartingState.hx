@@ -1,5 +1,6 @@
 package psych.states.editors;
 
+import flixel.util.FlxSpriteUtil;
 import finality.util.MathUtil;
 import finality.util.DateUtil;
 import finality.util.FileUtil;
@@ -90,6 +91,20 @@ class ChartingState extends MusicBeatState
       'Play Sound',
       "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"
     ]
+  ];
+
+  final quantColors:Array<FlxColor> = [
+    0xFFDF0000,
+    0xFF4040CF,
+    0xFFAF00AF,
+    0xFFFFAF00,
+    0xFFFFFFFF,
+    0xFFFFA0FF,
+    0xFFFF6030,
+    0xFF00CFCF,
+    0xFF00CF00,
+    0xFF9F9F9F,
+    0xFF3F3F3F,
   ];
 
   var _file:FileReference;
@@ -217,10 +232,9 @@ class ChartingState extends MusicBeatState
 
     vortex = FlxG.save.data.chart_vortex;
     ignoreWarnings = FlxG.save.data.ignoreWarnings;
-    var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+    var bg:FlxSprite = new FlxSprite().makeGraphic(1280, 720, FlxColor.fromString('0x130B2B'));
     bg.antialiasing = ClientPrefs.data.antialiasing;
     bg.scrollFactor.set();
-    bg.color = 0xFF222222;
     add(bg);
 
     gridLayer = new FlxTypedGroup<FlxSprite>();
@@ -288,9 +302,9 @@ class ChartingState extends MusicBeatState
     strumLine = new FlxSprite(0, 50).makeGraphic(Std.int(GRID_SIZE * 9), 4, FlxColor.RED);
     add(strumLine);
 
-    quant = new AttachedSprite('chart_quant', 'chart_quant');
-    quant.animation.addByPrefix('q', 'chart_quant', 0, false);
-    quant.animation.play('q', true, false, 0);
+    quant = new AttachedSprite();
+    quant.makeGraphic(30, 15, FlxColor.TRANSPARENT);
+    FlxSpriteUtil.drawRoundRectComplex(quant, 0, 0, 30, 15, 10, 27.5, 10, 27.5, FlxColor.WHITE);
     quant.sprTracker = strumLine;
     quant.xAdd = -32;
     quant.yAdd = 8;
@@ -401,7 +415,7 @@ class ChartingState extends MusicBeatState
   {
     if (autoSaveTimer != null) autoSaveTimer.cancel();
 
-    autoSaveTimer = new FlxTimer().start(120, (t:FlxTimer) -> {
+    autoSaveTimer = new FlxTimer().start(autoSaveStepper.value, (t:FlxTimer) -> {
       persistentUpdate = false;
       autosaveSong();
       openSubState(new PopUpSubState('Current chart autosaving...\n\n${randomBullshit()}', FlxG.random.float(0.4)));
@@ -1269,6 +1283,8 @@ class ChartingState extends MusicBeatState
   var instVolume:FlxUINumericStepper;
   var voicesVolume:FlxUINumericStepper;
   var voicesOppVolume:FlxUINumericStepper;
+  var autoSaveStepper:FlxUINumericStepper;
+  var infoGrp:FlxSpriteGroup;
 
   function addChartingUI()
   {
@@ -1389,10 +1405,14 @@ class ChartingState extends MusicBeatState
     if (FlxG.save.data.chart_metronome == null) FlxG.save.data.chart_metronome = false;
     metronome.checked = FlxG.save.data.chart_metronome;
 
+    if (FlxG.save.data.chart_autosave_time == null) FlxG.save.data.chart_autosave_time = 120;
+
     metronomeStepper = new FlxUINumericStepper(15, 55, 5, _song.bpm, 1, 1500, 1);
     metronomeOffsetStepper = new FlxUINumericStepper(metronomeStepper.x + 100, metronomeStepper.y, 25, 0, 0, 1000, 1);
+    autoSaveStepper = new FlxUINumericStepper(metronomeOffsetStepper.x + 100, metronomeOffsetStepper.y, 10, FlxG.save.data.chart_autosave_time, 60, 3600, 1);
     blockPressWhileTypingOnStepper.push(metronomeStepper);
     blockPressWhileTypingOnStepper.push(metronomeOffsetStepper);
+    blockPressWhileTypingOnStepper.push(autoSaveStepper);
 
     disableAutoScrolling = new FlxUICheckBox(metronome.x + 120, metronome.y, null, null, "Disable Autoscroll (Not Recommended)", 120, function() {
       FlxG.save.data.chart_noAutoScroll = disableAutoScrolling.checked;
@@ -1421,14 +1441,28 @@ class ChartingState extends MusicBeatState
     tab_group_chart.add(sliderRate);
     #end
 
-    tab_group_chart.add(new FlxText(metronomeStepper.x, metronomeStepper.y - 15, 0, 'BPM:'));
-    tab_group_chart.add(new FlxText(metronomeOffsetStepper.x, metronomeOffsetStepper.y - 15, 0, 'Offset (ms):'));
+    infoGrp = new FlxSpriteGroup();
+    infoGrp.alpha = .001;
+
+    var infoBG:FlxSprite = new FlxSprite(autoSaveStepper.x, autoSaveStepper.y + autoSaveStepper.height).makeGraphic(225, 65, 0x0);
+    FlxSpriteUtil.drawRoundRect(infoBG, 0, 0, 225, 65, 10, 10, FlxColor.fromString('0x120418'));
+    infoBG.alpha = .8;
+    infoGrp.add(infoBG);
+
+    var infoText:FlxText = new FlxText(infoBG.x + 5, infoBG.y + 5, 265, "WARNING\nIt will work after the current autosave!", 16);
+    infoText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+    infoGrp.add(infoText);
+
+    tab_group_chart.add(new FlxText(metronomeStepper.x, metronomeStepper.y - 15, 0, 'Metronome Beat:'));
+    tab_group_chart.add(new FlxText(metronomeOffsetStepper.x, metronomeOffsetStepper.y - 15, 0, 'Offset (MN):'));
+    tab_group_chart.add(new FlxText(autoSaveStepper.x, autoSaveStepper.y - 15, 0, "Autosave Time:"));
     tab_group_chart.add(new FlxText(instVolume.x, instVolume.y - 15, 0, 'Inst Volume'));
     tab_group_chart.add(new FlxText(voicesVolume.x, voicesVolume.y - 15, 0, 'Main Vocals'));
     tab_group_chart.add(new FlxText(voicesOppVolume.x, voicesOppVolume.y - 15, 0, 'Opp. Vocals'));
     tab_group_chart.add(metronome);
     tab_group_chart.add(disableAutoScrolling);
     tab_group_chart.add(metronomeStepper);
+    tab_group_chart.add(autoSaveStepper);
     tab_group_chart.add(metronomeOffsetStepper);
     #if desktop
     tab_group_chart.add(waveformUseInstrumental);
@@ -1446,6 +1480,8 @@ class ChartingState extends MusicBeatState
     tab_group_chart.add(check_warnings);
     tab_group_chart.add(playSoundBf);
     tab_group_chart.add(playSoundDad);
+    tab_group_chart.add(infoGrp);
+
     UI_box.addGroup(tab_group_chart);
   }
 
@@ -1810,6 +1846,8 @@ class ChartingState extends MusicBeatState
   var lastConductorPos:Float;
   var colorSine:Float = 0;
   var noteSelecting:Bool = false;
+  var mouseSelect:Int = 0;
+  var infoTween:FlxTween;
 
   override function update(elapsed:Float)
   {
@@ -1855,6 +1893,36 @@ class ChartingState extends MusicBeatState
     }
     FlxG.watch.addQuick('daBeat', curBeat);
     FlxG.watch.addQuick('daStep', curStep);
+
+    if (FlxG.mouse.overlaps(autoSaveStepper) && mouseSelect < 1)
+    {
+      mouseSelect = 2;
+
+      if (infoTween != null) infoTween.cancel();
+
+      infoTween = FlxTween.tween(infoGrp, {alpha: 1.0}, 0.4,
+        {
+          ease: FlxEase.circOut,
+          startDelay: 0.2,
+          onComplete: (t:FlxTween) -> {
+            t = null;
+          }
+        });
+    }
+    else if (!FlxG.mouse.overlaps(autoSaveStepper) && mouseSelect == 2)
+    {
+      mouseSelect = 0;
+
+      if (infoTween != null) infoTween.cancel();
+
+      infoTween = FlxTween.tween(infoGrp, {alpha: 0.001}, 0.25,
+        {
+          ease: FlxEase.circOut,
+          onComplete: (t:FlxTween) -> {
+            t = null;
+          }
+        });
+    }
 
     if (FlxG.mouse.x > gridBG.x
       && FlxG.mouse.x < gridBG.x + gridBG.width
@@ -2181,7 +2249,7 @@ class ChartingState extends MusicBeatState
 
           quantization = quantizations[curQuant];
         }
-        quant.animation.play('q', true, false, curQuant);
+        quant.color = quantColors[curQuant];
       }
       if (vortex && !blockInput)
       {
@@ -2335,7 +2403,13 @@ class ChartingState extends MusicBeatState
       + quantization
       + "th"
       + "\n\nTime: "
-      + Std.string(MathUtil.recalculateTime(FlxG.sound.music.time) + ' / ' + MathUtil.recalculateTime(FlxG.sound.music.length));
+      + Std.string(MathUtil.recalculateTime(FlxG.sound.music.time)
+        + ' / '
+        + MathUtil.recalculateTime(FlxG.sound.music.length)
+        + "\n\nAutosaving: "
+        + Std.string((autoSaveTimer != null ? MathUtil.recalculateTime(Std.int(autoSaveTimer.timeLeft) * 1000)
+          + ' / '
+          + MathUtil.recalculateTime(Std.int(autoSaveTimer.time) * 1000) : "N\\A")));
 
     var playedSound:Array<Bool> = [false, false, false, false]; // Prevents ouchy GF sex sounds
     curRenderedNotes.forEachAlive(function(note:Note) {
@@ -3384,6 +3458,7 @@ class ChartingState extends MusicBeatState
     var data = haxe.Json.stringify({"song": _song}, '\t');
     sys.io.File.saveContent('backups/chart-${DateUtil.generateTimestamp(Date.now())}.json', data);
 
+    FlxG.save.data.chart_autosave_time = autoSaveStepper.value;
     FlxG.save.data.autosave = haxe.Json.stringify(
       {
         "song": _song

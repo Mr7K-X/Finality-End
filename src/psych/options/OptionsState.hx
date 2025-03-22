@@ -145,7 +145,7 @@ class OptionsState extends MusicBeatState
         FlxG.sound.music.volume = 0;
       }
       else
-        MusicBeatState.switchState(new MainMenuState());
+        MusicBeatState.switchState(new finality.ui.FinalityMenu());
 
       FlxG.camera.fade();
 
