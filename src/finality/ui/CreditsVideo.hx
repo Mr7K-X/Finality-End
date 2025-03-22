@@ -37,7 +37,7 @@ class CreditsVideo extends MusicBeatState
     {
       Sys.println('Hold on! File don\'t exists!');
       Sys.sleep(1.0);
-      MusicBeatState.switchState(new MusicBeatState());
+      MusicBeatState.switchState(new FinalityMenu());
     }
   }
 }

@@ -1,5 +1,6 @@
 package finality.ui;
 
+import flixel.tweens.misc.NumTween;
 import psych.options.OptionsState;
 import finality.util.EaseUtil;
 import finality.effects.IntervalShake;
@@ -29,6 +30,7 @@ class FinalityMenu extends MusicBeatState
   var tableZone:FlxSprite;
   var bloomTest:Bloom;
   var vhs:VHS;
+  var body:MenuSprite;
 
   override function create():Void
   {
@@ -80,7 +82,7 @@ class FinalityMenu extends MusicBeatState
 
       var blackfuck:MenuSprite = new MenuSprite('monitors/${name}BlackNaebal');
       blackfuck.scrollFactor.set(0.12, 0.12);
-      blackfuck.shader = vhs;
+      blackfuck.shader = new finality.shaders.WhiteOverlay();
       add(blackfuck);
 
       var details:MenuSprite = new MenuSprite('monitors/${name}Details');
@@ -102,6 +104,12 @@ class FinalityMenu extends MusicBeatState
       itemText.alpha = (started ? .6 : .001);
       itemText.shader = vhs;
       add(itemText);
+
+      var adding:MenuSprite = new MenuSprite('monitors/${name}BlackNaebal');
+      adding.scrollFactor.set(0.12, 0.12);
+      adding.shader = vhs;
+      adding.blend = ADD;
+      add(adding);
 
       var pos:FlxPoint = new FlxPoint();
       var hitbox:FlxSprite = new FlxSprite();
@@ -138,6 +146,7 @@ class FinalityMenu extends MusicBeatState
       item.setPosition(pos.x, pos.y);
       item.scrollFactor.set(0.12, 0.12);
       blackfuck.setPosition(item.x, item.y);
+      adding.setPosition(item.x, item.y);
       if (details != null) details.setPosition(item.x, item.y);
       itemText.setPosition(item.x, item.y);
       add(item);
@@ -190,7 +199,7 @@ class FinalityMenu extends MusicBeatState
 
     if (!ClientPrefs.data.lowQuality)
     {
-      var body:MenuSprite = new MenuSprite('body');
+      body = new MenuSprite('body');
       body.setPosition(1075, 450);
       body.scrollFactor.set(0.2, 0.2);
       add(body);
@@ -216,7 +225,7 @@ class FinalityMenu extends MusicBeatState
     else
     {
       FlxG.camera.zoom = 3.5;
-      FlxG.camera.scroll.y -= 300;
+      FlxG.camera.scroll.y -= 450;
 
       var blackout:FlxSprite = new FlxSprite(-100, -100).makeGraphic(1, 1, FlxColor.BLACK);
       blackout.scale.set(FlxG.width * 2, FlxG.height * 2);
@@ -235,6 +244,13 @@ class FinalityMenu extends MusicBeatState
                 ease: EaseUtil.easeInOutCirc,
                 onComplete: (_) -> {
                   FlxTween.tween(animText, {alpha: 1, y: animText.y + 40}, 0.25, {ease: FlxEase.quartOut});
+
+                  new FlxTimer().start(0.1, (_) -> {
+                    for (i in 0...itemsSprDat.length)
+                    {
+                      FlxTween.tween(itemsSprDat[i].text, {alpha: 0.6}, 0.2, {ease: FlxEase.quartInOut});
+                    }
+                  });
                 }
               });
 
@@ -301,6 +317,7 @@ class FinalityMenu extends MusicBeatState
   var zoomingCam:FlxTween;
   var curSelected:Int = 0;
   var selected:Bool = false;
+  var whiteTween:Array<NumTween> = [null, null, null, null];
 
   override function update(elapsed:Float):Void
   {
@@ -319,7 +336,7 @@ class FinalityMenu extends MusicBeatState
       FlxG.mouse.visible = true;
 
       FlxG.camera.scroll.x = MathUtil.coolLerp(FlxG.camera.scroll.x, (FlxG.mouse.screenX - (FlxG.width / 2)) * .15, 0.153);
-      FlxG.camera.scroll.y = MathUtil.coolLerp(FlxG.camera.scroll.y, (FlxG.mouse.screenY - (FlxG.width / 2) - (6 + (mouseZoneSelect == 2 ? 400 : 0))) * .15,
+      FlxG.camera.scroll.y = MathUtil.coolLerp(FlxG.camera.scroll.y, (FlxG.mouse.screenY - (FlxG.width / 2) - (6 + (mouseZoneSelect == 2 ? 800 : 0))) * .15,
         0.1);
 
       if (FlxG.mouse.overlaps(tableZone) && mouseZoneSelect < 1)
@@ -363,7 +380,14 @@ class FinalityMenu extends MusicBeatState
 
           if (IntervalShake.isShaking(itemsSprDat[i].text)) IntervalShake.stopShaking(itemsSprDat[i].text);
 
-          IntervalShake.shake(itemsSprDat[i].text, 0.15, 0.04, 0.01, 0, FlxEase.quadOut);
+          IntervalShake.shake(itemsSprDat[i].text, 0.15, 0.02, 0.01, 0, FlxEase.quadOut);
+
+          if (whiteTween[i] != null) whiteTween[i].cancel();
+
+          itemsSprDat[i].blackfuck.shader.data.progress.value = [0.25];
+          whiteTween[i] = FlxTween.num(0.25, 0., 0.4, {ease: FlxEase.quadInOut}, (t:Float) -> {
+            itemsSprDat[i].blackfuck.shader.data.progress.value[0] = t;
+          });
 
           curSelected = i;
 
@@ -412,6 +436,15 @@ class FinalityMenu extends MusicBeatState
 
     IntervalShake.shake(itemsSprDat[index].text, 1, 0.07, 0.03, 0, FlxEase.quadInOut);
 
+    if (whiteTween[index] != null) whiteTween[index].cancel();
+
+    itemsSprDat[index].blackfuck.shader.data.progress.value = [0.7];
+    whiteTween[index] = FlxTween.num(0.7, 0., 0.4, {ease: FlxEase.quadInOut}, (t:Float) -> {
+      itemsSprDat[index].blackfuck.shader.data.progress.value[0] = t;
+    });
+
+    if (body != null) remove(body);
+
     if (itemsSprDat[index].details != null) FlxTween.tween(itemsSprDat[index].details, {alpha: 1}, 1, {ease: FlxEase.cubeOut});
 
     switch (itemsSprDat[index].name)
@@ -419,25 +452,25 @@ class FinalityMenu extends MusicBeatState
       case "worlds":
         nextState = new StoryMenuState();
         scrolling.set(-1000, -1200);
-        FlxTween.tween(FlxG.camera, {angle: -2.5}, 0.55, {ease: FlxEase.cubeOut});
+        FlxTween.tween(FlxG.camera, {angle: -2.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "extras":
         nextState = new FreeplayState();
         scrolling.set(-1200, -100);
-        FlxTween.tween(FlxG.camera, {angle: -1.5}, 0.55, {ease: FlxEase.cubeOut});
+        FlxTween.tween(FlxG.camera, {angle: -1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "credits":
         nextState = new CreditsVideo();
-        scrolling.set(1050, -1000);
-        FlxTween.tween(FlxG.camera, {angle: 1.5}, 0.55, {ease: FlxEase.cubeOut});
+        scrolling.set(1050, -1200);
+        FlxTween.tween(FlxG.camera, {angle: 1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "options":
         nextState = new OptionsState();
-        scrolling.set(1550, -300);
-        FlxTween.tween(FlxG.camera, {angle: 2.5}, 0.55, {ease: FlxEase.cubeOut});
+        scrolling.set(1490, -500);
+        FlxTween.tween(FlxG.camera, {angle: -2.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
     }
 
     new FlxTimer().start(0.2, (_) -> FlxG.camera.fade(FlxColor.BLACK, 0.45));
 
-    FlxTween.tween(FlxG.camera, {"scroll.x": scrolling.x, "scroll.y": scrolling.y}, 0.67, {ease: FlxEase.cubeOut});
-    FlxTween.tween(FlxG.camera, {zoom: 4.25}, 0.7, {ease: FlxEase.cubeInOut, startDelay: 0.1});
+    FlxTween.tween(FlxG.camera, {"scroll.x": scrolling.x, "scroll.y": scrolling.y}, 0.67, {ease: FlxEase.quartInOut});
+    FlxTween.tween(FlxG.camera, {zoom: 4.25}, 1, {ease: FlxEase.cubeInOut});
 
     new FlxTimer().start(1, (_) -> {
       MusicBeatState.switchState(nextState);
