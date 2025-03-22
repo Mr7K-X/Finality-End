@@ -59,7 +59,7 @@ class FinalityMenu extends MusicBeatState
     }
 
     var screens:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/screens'), true, 1280, 720);
-    screens.animation.add('idle', [0, 1], 12, true);
+    screens.animation.add('idle', [0, 1], 24, true);
     screens.scrollFactor.set(0.08, 0.08);
     screens.animation.play('idle');
     screens.alpha = (started ? 1 : 0.001);
@@ -176,7 +176,7 @@ class FinalityMenu extends MusicBeatState
     add(bgPC);
 
     var animText:FlxSprite = new FlxSprite(555, 272.5 - (10 + 25 + (!started ? 40 : 0))).loadGraphic(Paths.image('mainmenu/finalityAnim'), true, 1000, 1000);
-    animText.animation.add("idle", [0, 1, 2, 3], 24, true);
+    animText.animation.add("idle", [0, 1, 2, 3], 6, true);
     animText.animation.play('idle');
     animText.scale.set(.19, .19);
     animText.updateHitbox();
