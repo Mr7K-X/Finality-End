@@ -1780,6 +1780,8 @@ class PlayState extends MusicBeatState
     smoothGameZoom = MathUtil.coolLerp(FlxG.camera.zoom, defaultCamZoom, 0.1 * camZoomingDecay * playbackRate);
     smoothHUDZoom = MathUtil.coolLerp(camHUD.zoom, DEFAULT_CAM_HUD_ZOOM, 0.1 * camZoomingDecay * playbackRate);
 
+    updateSmoothHealth();
+
     if (camZooming)
     {
       FlxG.camera.zoom = smoothGameZoom;
