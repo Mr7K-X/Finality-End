@@ -37,66 +37,41 @@ class CustomFadeTransition extends MusicBeatSubstate
         FlxTween.tween(black, {alpha: 1}, _timer, {ease: FlxEase.quadInOut});
 
         add(black);
+
+        new FlxTimer().start(_timer, (_) -> (_onComplete != null ? _onComplete() : {}));
       }
       else
       {
-        var jaw1:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw1'));
-        jaw1.antialiasing = ClientPrefs.data.antialiasing;
-        jaw1.updateHitbox();
-        jaw1.scrollFactor.set();
+        var jaw:FlxSprite = new FlxSprite();
+        jaw.frames = Paths.getSparrowAtlas('transitionSwag/jaw');
+        jaw.animation.addByPrefix('jaw', 'jaw', 24, false);
+        jaw.animation.play('jaw');
+        jaw.antialiasing = ClientPrefs.data.antialiasing;
+        jaw.updateHitbox();
+        jaw.scrollFactor.set();
+        add(jaw);
 
-        var jaw2:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw2'));
-        jaw2.antialiasing = ClientPrefs.data.antialiasing;
-        jaw2.updateHitbox();
-        jaw2.scrollFactor.set();
-
-        jaw1.y = -FlxG.height;
-        jaw2.y = FlxG.height;
-
-        FlxTween.tween(jaw1, {y: 0}, _timer, {ease: FlxEase.expoInOut});
-        FlxTween.tween(jaw2, {y: 0}, _timer, {ease: FlxEase.expoInOut});
-
-        add(jaw2);
-        add(jaw1);
+        new FlxTimer().start(1.4 / 2, (_) -> (_onComplete != null ? _onComplete() : {}));
       }
-
-      new FlxTimer().start(_timer, (_) -> (_onComplete != null ? _onComplete() : {}));
     }
     else
     {
       if (!_isBlack)
       {
-        var jaw1:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw1'));
-        jaw1.antialiasing = ClientPrefs.data.antialiasing;
-        jaw1.updateHitbox();
-        jaw1.scrollFactor.set();
+        var jaw:FlxSprite = new FlxSprite();
+        jaw.frames = Paths.getSparrowAtlas('transitionSwag/jaw');
+        jaw.animation.addByPrefix('jaw', 'jaw', 24, false);
+        jaw.animation.play('jaw', false, true);
+        jaw.antialiasing = ClientPrefs.data.antialiasing;
+        jaw.updateHitbox();
+        jaw.scrollFactor.set();
+        add(jaw);
 
-        var jaw2:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw2'));
-        jaw2.antialiasing = ClientPrefs.data.antialiasing;
-        jaw2.updateHitbox();
-        jaw2.scrollFactor.set();
-
-        FlxTween.tween(jaw1, {y: -FlxG.height}, _timer,
-          {
-            ease: FlxEase.expoInOut, // lol
-            onComplete: (_) -> {
-              jaw1.kill();
-              remove(jaw1);
-              jaw1.destroy();
-            }
-          });
-        FlxTween.tween(jaw2, {y: FlxG.height}, _timer,
-          {
-            ease: FlxEase.expoInOut,
-            onComplete: (_) -> {
-              jaw2.kill();
-              remove(jaw2);
-              jaw2.destroy();
-            }
-          });
-
-        add(jaw2);
-        add(jaw1);
+        new FlxTimer().start(1.4 / 2, (_) -> {
+          jaw.kill();
+          remove(jaw);
+          jaw.destroy();
+        });
       }
       else
       {
@@ -116,13 +91,13 @@ class CustomFadeTransition extends MusicBeatSubstate
           });
 
         add(black);
+
+        new FlxTimer().start(_timer, (_) -> {
+          if (_onComplete != null) _onComplete();
+
+          close();
+        });
       }
-
-      new FlxTimer().start(_timer, (_) -> {
-        if (_onComplete != null) _onComplete();
-
-        close();
-      });
     }
   }
 }

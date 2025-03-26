@@ -337,9 +337,11 @@ class FinalityMenu extends MusicBeatState
       #if debug
       if (FlxG.keys.anyJustPressed(ClientPrefs.keyBinds.get('debug_1')))
       {
-        FlxTransitionableState.skipNextTransOut = false;
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxTransitionableState.skipNextTransOut = true;
         selected = true;
-        MusicBeatState.switchState(new psych.states.editors.MasterEditorMenu());
+
+        FlxG.switchState(() -> new psych.states.editors.MasterEditorMenu());
       }
       #end
 

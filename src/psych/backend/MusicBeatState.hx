@@ -36,6 +36,7 @@ class MusicBeatState extends FlxUIState
 
     super.create();
 
+    FlxG.state.persistentUpdate = FlxG.state.persistentDraw = true;
     if (FlxG.state.subState != null) FlxG.state.closeSubState();
 
     if (FlxG.cameras.list.contains(camFade)) FlxG.cameras.remove(camFade, true);
