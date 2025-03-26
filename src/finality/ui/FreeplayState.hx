@@ -1,5 +1,6 @@
 package finality.ui;
 
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import openfl.filters.ShaderFilter;
 import haxe.Json;
@@ -413,6 +414,9 @@ class FreeplayState extends MusicBeatState
       }
       else
       {
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxTransitionableState.skipNextTransOut = true;
+
         FlxG.sound.music.stop();
         persistentUpdate = false;
         if (colorTween != null)

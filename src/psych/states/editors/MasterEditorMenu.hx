@@ -1,5 +1,6 @@
 package psych.states.editors;
 
+import flixel.addons.transition.FlxTransitionableState;
 import psych.backend.WeekData;
 import psych.objects.Character;
 import finality.ui.MainMenuState;
@@ -96,6 +97,9 @@ class MasterEditorMenu extends MusicBeatState
 
     if (controls.BACK)
     {
+      FlxTransitionableState.skipNextTransIn = true;
+      FlxTransitionableState.skipNextTransOut = true;
+
       MusicBeatState.switchState(new finality.ui.FinalityMenu());
     }
 

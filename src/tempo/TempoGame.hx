@@ -55,8 +55,6 @@ class TempoGame extends FlxGame
   {
     if (_skipNextTickUpdate != (_skipNextTickUpdate = false)) _total = ticks = getTicks();
 
-    TempoGame.totalGameTime += Std.int(FlxG.elapsed);
-
     super.onEnterFrame(_);
   }
 }

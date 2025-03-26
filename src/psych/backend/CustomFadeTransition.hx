@@ -4,73 +4,125 @@ import flixel.util.FlxGradient;
 
 class CustomFadeTransition extends MusicBeatSubstate
 {
-	public static var finishCallback:Void->Void;
+  var _fadeIn:Null<Bool> = null;
+  var _onComplete:Null<Void->Void> = null;
+  var _timer:Null<Float> = null;
+  var _isBlack:Null<Bool> = null;
 
-	var isTransIn:Bool = false;
-	var transBlack:FlxSprite;
-	var transGradient:FlxSprite;
-	var blackfuck:FlxSprite;
-	var duration:Float;
+  public function new(timer:Float, ?fadeIn:Bool = true, ?newCamera:FlxCamera, ?onComplete:Void->Void, ?isBlack:Bool = false):Void
+  {
+    super();
 
-	public function new(duration:Float, isTransIn:Bool)
-	{
-		super();
+    this.camera = (newCamera == null ? cameras[cameras.length - 1] : newCamera);
 
-		this.duration = duration;
-		this.isTransIn = isTransIn;
-	}
+    _fadeIn = fadeIn;
+    _onComplete = onComplete;
+    _timer = timer;
+    _isBlack = isBlack;
 
-	override function create()
-	{
-		super.create();
+    trans();
+  }
 
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length-1]];
+  function trans():Void
+  {
+    if (_fadeIn)
+    {
+      if (_isBlack)
+      {
+        var black:FlxSprite = new FlxSprite(-1, -1).makeGraphic(FlxG.width + 2, FlxG.height + 2, FlxColor.BLACK);
+        black.updateHitbox();
+        black.scrollFactor.set();
+        black.alpha = .001;
 
-		var width:Int = Std.int(FlxG.width / Math.max(camera.zoom, 0.001));
-		var height:Int = Std.int(FlxG.height / Math.max(camera.zoom, 0.001));
+        FlxTween.tween(black, {alpha: 1}, _timer, {ease: FlxEase.quadInOut});
 
-		transGradient = FlxGradient.createGradientFlxSprite(
-			width, 1, (isTransIn ? [FlxColor.TRANSPARENT, FlxColor.BLACK] : [FlxColor.BLACK, FlxColor.TRANSPARENT]), 1, 0);
-		transGradient.scale.y = height;
-		transGradient.updateHitbox();
-		transGradient.scrollFactor.set();
-		transGradient.screenCenter(X);
-		add(transGradient);
+        add(black);
+      }
+      else
+      {
+        var jaw1:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw1'));
+        jaw1.antialiasing = ClientPrefs.data.antialiasing;
+        jaw1.updateHitbox();
+        jaw1.scrollFactor.set();
 
-		transBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		transBlack.scale.set(width, height + 400);
-		transBlack.updateHitbox();
-		transBlack.scrollFactor.set();
-		transBlack.screenCenter(X);
-		add(transBlack);
+        var jaw2:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw2'));
+        jaw2.antialiasing = ClientPrefs.data.antialiasing;
+        jaw2.updateHitbox();
+        jaw2.scrollFactor.set();
 
-		if(isTransIn)
-			transGradient.x = transBlack.x - transBlack.width;
-		else
-			transGradient.x = -transGradient.width;
-	}
+        jaw1.y = -FlxG.height;
+        jaw2.y = FlxG.height;
 
-	override function update(elapsed:Float) {
-		super.update(elapsed);
+        FlxTween.tween(jaw1, {y: 0}, _timer, {ease: FlxEase.expoInOut});
+        FlxTween.tween(jaw2, {y: 0}, _timer, {ease: FlxEase.expoInOut});
 
-		final width:Float = FlxG.width * Math.max(camera.zoom, 0.001);
-		final targetPos:Float = transGradient.width - 50 * Math.max(camera.zoom, 0.001);
+        add(jaw2);
+        add(jaw1);
+      }
 
-		if(duration > 0)
-			transGradient.x += (width + targetPos) * elapsed / duration;
-		else
-			transGradient.x = (targetPos) * elapsed;
+      new FlxTimer().start(_timer, (_) -> (_onComplete != null ? _onComplete() : {}));
+    }
+    else
+    {
+      if (!_isBlack)
+      {
+        var jaw1:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw1'));
+        jaw1.antialiasing = ClientPrefs.data.antialiasing;
+        jaw1.updateHitbox();
+        jaw1.scrollFactor.set();
 
-		if(isTransIn) {
-			transBlack.x = transGradient.x + transGradient.width;
-		} else
-			transBlack.x = transGradient.x - transGradient.width;
+        var jaw2:FlxSprite = new FlxSprite().loadGraphic(Paths.image('transitionSwag/jaw2'));
+        jaw2.antialiasing = ClientPrefs.data.antialiasing;
+        jaw2.updateHitbox();
+        jaw2.scrollFactor.set();
 
-		if(transGradient.x >= targetPos)
-		{
-			close();
-			if(finishCallback != null) finishCallback();
-			finishCallback = null;
-		}
-	}
+        FlxTween.tween(jaw1, {y: -FlxG.height}, _timer,
+          {
+            ease: FlxEase.expoInOut, // lol
+            onComplete: (_) -> {
+              jaw1.kill();
+              remove(jaw1);
+              jaw1.destroy();
+            }
+          });
+        FlxTween.tween(jaw2, {y: FlxG.height}, _timer,
+          {
+            ease: FlxEase.expoInOut,
+            onComplete: (_) -> {
+              jaw2.kill();
+              remove(jaw2);
+              jaw2.destroy();
+            }
+          });
+
+        add(jaw2);
+        add(jaw1);
+      }
+      else
+      {
+        var black:FlxSprite = new FlxSprite(-1, -1).makeGraphic(FlxG.width + 2, FlxG.height + 2, FlxColor.BLACK);
+        black.updateHitbox();
+        black.scrollFactor.set();
+        black.alpha = 1;
+
+        FlxTween.tween(black, {alpha: .001}, _timer,
+          {
+            ease: FlxEase.quadInOut,
+            onComplete: (_) -> {
+              black.kill();
+              remove(black);
+              black.destroy();
+            }
+          });
+
+        add(black);
+      }
+
+      new FlxTimer().start(_timer, (_) -> {
+        if (_onComplete != null) _onComplete();
+
+        close();
+      });
+    }
+  }
 }

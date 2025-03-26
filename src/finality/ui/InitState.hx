@@ -60,7 +60,12 @@ class InitState extends FlxState
     DiscordClient.prepare();
     #end
 
-    MusicBeatState.switchState(new FinalityMenu());
+    FlxTransitionableState.skipNextTransIn = true;
+    FlxTransitionableState.skipNextTransOut = true;
+
+    new FlxTimer().start(1, (_) -> {
+      FlxG.switchState(() -> new FinalityMenu());
+    });
   }
 
   override function update(elapsed:Float):Void

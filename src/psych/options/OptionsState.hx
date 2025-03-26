@@ -1,5 +1,6 @@
 package psych.options;
 
+import flixel.addons.transition.FlxTransitionableState;
 import finality.ui.MainMenuState;
 import flixel.util.FlxDestroyUtil;
 import openfl.display.BlendMode;
@@ -145,7 +146,12 @@ class OptionsState extends MusicBeatState
         FlxG.sound.music.volume = 0;
       }
       else
+      {
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxTransitionableState.skipNextTransOut = true;
+
         MusicBeatState.switchState(new finality.ui.FinalityMenu());
+      }
 
       FlxG.camera.fade();
 

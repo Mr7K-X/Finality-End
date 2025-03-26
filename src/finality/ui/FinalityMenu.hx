@@ -1,5 +1,7 @@
 package finality.ui;
 
+import finality.shaders.Sharp.SharpEffect;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.misc.NumTween;
 import psych.options.OptionsState;
 import finality.util.EaseUtil;
@@ -29,6 +31,7 @@ class FinalityMenu extends MusicBeatState
 
   var tableZone:FlxSprite;
   var bloomTest:Bloom;
+  var sharpTest:SharpEffect;
   var vhs:VHS;
   var body:MenuSprite;
 
@@ -277,6 +280,9 @@ class FinalityMenu extends MusicBeatState
       });
     }
 
+    sharpTest = new SharpEffect();
+    sharpTest.intensity = .4;
+
     bloomTest = new Bloom();
     bloomTest.rgba =
       {
@@ -285,7 +291,7 @@ class FinalityMenu extends MusicBeatState
         b: 232,
         a: 210
       };
-    FlxG.camera.filters = [new ShaderFilter(bloomTest.shader)];
+    FlxG.camera.filters = [new ShaderFilter(bloomTest.shader), new ShaderFilter(sharpTest.shader)];
     FlxG.signals.postDraw.add(postDraw);
   }
 
@@ -328,10 +334,14 @@ class FinalityMenu extends MusicBeatState
 
     if (started && !selected)
     {
+      #if debug
       if (FlxG.keys.anyJustPressed(ClientPrefs.keyBinds.get('debug_1')))
       {
-        FlxG.switchState(() -> new psych.states.editors.MasterEditorMenu());
+        FlxTransitionableState.skipNextTransOut = false;
+        selected = true;
+        MusicBeatState.switchState(new psych.states.editors.MasterEditorMenu());
       }
+      #end
 
       FlxG.mouse.visible = true;
 
@@ -421,6 +431,9 @@ class FinalityMenu extends MusicBeatState
     var scrolling:FlxPoint = new FlxPoint();
     var nextState:flixel.FlxState = null;
 
+    FlxTransitionableState.skipNextTransIn = true;
+    FlxTransitionableState.skipNextTransOut = true;
+
     for (i in 0...itemsSprDat.length)
     {
       if (index != i) FlxTween.tween(itemsSprDat[i].text, {alpha: 0}, 0.4, {ease: FlxEase.quadOut});
@@ -451,19 +464,28 @@ class FinalityMenu extends MusicBeatState
     {
       case "worlds":
         nextState = new StoryMenuState();
-        scrolling.set(-1000, -1200);
+        scrolling.set(-1042, -1512);
         FlxTween.tween(FlxG.camera, {angle: -2.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "extras":
         nextState = new FreeplayState();
-        scrolling.set(-1200, -100);
+        scrolling.set(-1211, -121);
         FlxTween.tween(FlxG.camera, {angle: -1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "credits":
         nextState = new CreditsVideo();
-        scrolling.set(1050, -1200);
+        scrolling.set(1054, -1319);
         FlxTween.tween(FlxG.camera, {angle: 1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "options":
         nextState = new OptionsState();
-        scrolling.set(1490, -500);
+
+        OptionsState.onPlayState = false;
+        if (PlayState.SONG != null)
+        {
+          PlayState.SONG.arrowSkin = null;
+          PlayState.SONG.splashSkin = null;
+          PlayState.stageUI = 'normal';
+        }
+
+        scrolling.set(1494.2, -521);
         FlxTween.tween(FlxG.camera, {angle: -2.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
     }
 

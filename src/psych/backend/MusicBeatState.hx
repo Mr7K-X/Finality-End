@@ -7,6 +7,8 @@ import psych.backend.PsychCamera;
 
 class MusicBeatState extends FlxUIState
 {
+  public static var camFade:FlxCamera;
+
   private var curSection:Int = 0;
   private var stepsToDo:Int = 0;
 
@@ -34,10 +36,19 @@ class MusicBeatState extends FlxUIState
 
     super.create();
 
-    if (!skip)
-    {
-      openSubState(new CustomFadeTransition(0.6, true));
-    }
+    if (FlxG.state.subState != null) FlxG.state.closeSubState();
+
+    if (FlxG.cameras.list.contains(camFade)) FlxG.cameras.remove(camFade, true);
+    if (camFade != null) camFade = null;
+
+    camFade = new FlxCamera();
+    camFade.bgColor.alpha = 0;
+    FlxG.cameras.add(camFade, false);
+
+    FlxG.state.openSubState(new CustomFadeTransition(skip ? 0.4 : 0.45, false, camFade, () -> {
+      camFade = null;
+    }, skip));
+
     FlxTransitionableState.skipNextTransOut = false;
     timePassedOnState = 0;
   }
@@ -134,6 +145,8 @@ class MusicBeatState extends FlxUIState
 
   public static function switchState(nextState:FlxState = null)
   {
+    if (FlxG.state.subState != null) FlxG.state.closeSubState();
+
     if (nextState == null) nextState = FlxG.state;
     if (nextState == FlxG.state)
     {
@@ -141,17 +154,15 @@ class MusicBeatState extends FlxUIState
       return;
     }
 
-    if (FlxTransitionableState.skipNextTransIn) FlxG.switchState(nextState);
-    else
-      startTransition(nextState);
+    startTransition(nextState);
     FlxTransitionableState.skipNextTransIn = false;
   }
 
   public static function resetState()
   {
-    if (FlxTransitionableState.skipNextTransIn) FlxG.resetState();
-    else
-      startTransition();
+    if (FlxG.state.subState != null) FlxG.state.closeSubState();
+
+    startTransition();
     FlxTransitionableState.skipNextTransIn = false;
   }
 
@@ -160,10 +171,20 @@ class MusicBeatState extends FlxUIState
   {
     if (nextState == null) nextState = FlxG.state;
 
-    FlxG.state.openSubState(new CustomFadeTransition(0.6, false));
-    if (nextState == FlxG.state) CustomFadeTransition.finishCallback = function() FlxG.resetState();
-    else
-      CustomFadeTransition.finishCallback = function() FlxG.switchState(nextState);
+    if (FlxG.cameras.list.contains(camFade)) FlxG.cameras.remove(camFade, true);
+    if (camFade != null) camFade = null;
+
+    camFade = new FlxCamera();
+    camFade.bgColor.alpha = 0;
+    FlxG.cameras.add(camFade, false);
+
+    FlxG.state.openSubState(new CustomFadeTransition(FlxTransitionableState.skipNextTransIn ? 0.4 : 0.45, true, camFade, () -> {
+      camFade = null;
+
+      if (nextState == FlxG.state) FlxG.resetState();
+      else
+        FlxG.switchState(nextState);
+    }, FlxTransitionableState.skipNextTransIn));
   }
 
   public static function getState():MusicBeatState

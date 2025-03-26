@@ -1,5 +1,6 @@
 package finality.ui;
 
+import flixel.addons.transition.FlxTransitionableState;
 import psych.backend.Highscore;
 import psych.substates.StickerSubState;
 import psych.backend.Song;
@@ -197,6 +198,8 @@ class StoryMenuState extends MusicBeatState
       if (controls.BACK)
       {
         selectedWeek = true;
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxTransitionableState.skipNextTransOut = true;
 
         FlxG.sound.play(Paths.sound('cancelMenu'));
         MusicBeatState.switchState(new FinalityMenu());

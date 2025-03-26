@@ -1,5 +1,6 @@
 package finality.ui;
 
+import flixel.addons.transition.FlxTransitionableState;
 import psych.substates.StickerSubState;
 
 class CreditsVideo extends MusicBeatState
@@ -35,6 +36,9 @@ class CreditsVideo extends MusicBeatState
     }
     else
     {
+      FlxTransitionableState.skipNextTransIn = true;
+      FlxTransitionableState.skipNextTransOut = true;
+
       Sys.println('Hold on! File don\'t exists!');
       Sys.sleep(1.0);
       MusicBeatState.switchState(new FinalityMenu());

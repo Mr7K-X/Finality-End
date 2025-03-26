@@ -2547,8 +2547,8 @@ class PlayState extends MusicBeatState
           trace('LOADING NEXT SONG');
           trace(Paths.formatToSongPath(PlayState.storyPlaylist[0]) + difficulty);
 
-          FlxTransitionableState.skipNextTransIn = true;
-          FlxTransitionableState.skipNextTransOut = true;
+          // FlxTransitionableState.skipNextTransIn = true;
+          // FlxTransitionableState.skipNextTransOut = true;
           prevCamFollow = camFollow;
 
           PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0] + difficulty, PlayState.storyPlaylist[0]);

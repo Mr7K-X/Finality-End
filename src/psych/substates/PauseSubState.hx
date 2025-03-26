@@ -250,6 +250,12 @@ class PauseSubState extends MusicBeatSubstate
         regenMenu();
       }
 
+      if (daSelected != "Restart Song" || daSelected != "Leave Charting Mode")
+      {
+        FlxTransitionableState.skipNextTransIn = false;
+        FlxTransitionableState.skipNextTransIn = false;
+      }
+
       switch (daSelected)
       {
         case "Resume":
@@ -345,6 +351,7 @@ class PauseSubState extends MusicBeatSubstate
       FlxTransitionableState.skipNextTransIn = true;
       FlxTransitionableState.skipNextTransOut = true;
     }
+
     MusicBeatState.resetState();
   }
 
