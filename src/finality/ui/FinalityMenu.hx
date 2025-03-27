@@ -33,6 +33,7 @@ class FinalityMenu extends MusicBeatState
   var sharpTest:SharpEffect;
   var vhs:VHS;
   var body:MenuSprite;
+  var vcrEffect:VcrGlitchEffect;
 
   override function create():Void
   {
@@ -55,7 +56,7 @@ class FinalityMenu extends MusicBeatState
     if (!ClientPrefs.data.lowQuality)
     {
       var upper:MenuSprite = new MenuSprite('upper');
-      upper.setPosition(615, 2.5);
+      upper.setPosition(700, 100);
       upper.scrollFactor.set(0.07, 0.07);
       add(upper);
     }
@@ -173,10 +174,10 @@ class FinalityMenu extends MusicBeatState
     bgPC.color = (!started ? FlxColor.BLACK : FlxColor.WHITE);
     add(bgPC);
 
-    var animText:FlxSprite = new FlxSprite(535, 280.5 - (10 + 25 + (!started ? 40 : 0))).loadGraphic(Paths.image('mainmenu/finalityAnim'), true, 1000, 1000);
+    var animText:FlxSprite = new FlxSprite(560, 295 - (10 + 25 + (!started ? 40 : 0))).loadGraphic(Paths.image('mainmenu/finalityAnim'), true, 1000, 1000);
     animText.animation.add("idle", [0, 1, 2, 3], 6, true);
     animText.animation.play('idle');
-    animText.scale.set(.19, .19);
+    animText.scale.set(.155, .155);
     animText.updateHitbox();
     animText.shader = vhs;
     animText.alpha = (started ? 1 : 0.001);
@@ -296,6 +297,12 @@ class FinalityMenu extends MusicBeatState
       };
     FlxG.camera.filters = [new ShaderFilter(bloomTest.shader), new ShaderFilter(sharpTest.shader)];
     FlxG.signals.postDraw.add(postDraw);
+
+    if (ClientPrefs.data.shaders)
+    {
+      vcrEffect = new VcrGlitchEffect();
+      FlxG.camera.setFilters([new ShaderFilter(vcrEffect.shader)]);
+    }
   }
 
   override function destroy():Void
@@ -330,6 +337,8 @@ class FinalityMenu extends MusicBeatState
 
   override function update(elapsed:Float):Void
   {
+    if (vcrEffect != null) vcrEffect.update(elapsed);
+
     if (FlxG.sound.music != null && FlxG.sound.music.playing) Conductor.songPosition = FlxG.sound.music.time;
     SoundUtil.volumeMax(0.7, 0.35, FlxG.sound.music);
 
