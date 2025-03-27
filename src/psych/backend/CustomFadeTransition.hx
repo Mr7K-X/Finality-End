@@ -44,14 +44,14 @@ class CustomFadeTransition extends MusicBeatSubstate
       {
         var jaw:FlxSprite = new FlxSprite();
         jaw.frames = Paths.getSparrowAtlas('transitionSwag/jaw');
-        jaw.animation.addByPrefix('jaw', 'jaw', 24, false);
+        jaw.animation.addByPrefix('jaw', 'jaw', 38, false);
         jaw.animation.play('jaw');
         jaw.antialiasing = ClientPrefs.data.antialiasing;
         jaw.updateHitbox();
         jaw.scrollFactor.set();
         add(jaw);
 
-        new FlxTimer().start(1.4 / 2, (_) -> (_onComplete != null ? _onComplete() : {}));
+        new FlxTimer().start(1 / 2, (_) -> (_onComplete != null ? _onComplete() : {}));
       }
     }
     else
@@ -60,14 +60,14 @@ class CustomFadeTransition extends MusicBeatSubstate
       {
         var jaw:FlxSprite = new FlxSprite();
         jaw.frames = Paths.getSparrowAtlas('transitionSwag/jaw');
-        jaw.animation.addByPrefix('jaw', 'jaw', 24, false);
+        jaw.animation.addByPrefix('jaw', 'jaw', 38, false);
         jaw.animation.play('jaw', false, true);
         jaw.antialiasing = ClientPrefs.data.antialiasing;
         jaw.updateHitbox();
         jaw.scrollFactor.set();
         add(jaw);
 
-        new FlxTimer().start(1.4 / 2, (_) -> {
+        new FlxTimer().start(1 / 2, (_) -> {
           jaw.kill();
           remove(jaw);
           jaw.destroy();
