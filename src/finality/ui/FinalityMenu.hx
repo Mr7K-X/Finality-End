@@ -22,7 +22,6 @@ class FinalityMenu extends MusicBeatState
   var itemsSprDat:Array<
     {
       name:String,
-      blackfuck:MenuSprite,
       details:MenuSprite,
       text:MenuSprite,
       monitor:MenuSprite,
@@ -61,19 +60,22 @@ class FinalityMenu extends MusicBeatState
       add(upper);
     }
 
-    var screens:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/screens'), true, 1280, 720);
-    screens.animation.add('idle', [0, 1], 24, true);
+    var screens:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/screens'));
     screens.scrollFactor.set(0.08, 0.08);
-    screens.animation.play('idle');
     screens.alpha = (started ? 1 : 0.001);
     add(screens);
 
     var table:MenuSprite = new MenuSprite('table');
     table.screenCenter(X);
     table.scrollFactor.set(0.12, 0.12);
-    table.x += 10;
-    table.y += 275;
+    table.y += 245;
     add(table);
+
+    var tablAe:MenuSprite = new MenuSprite('table_atributes');
+    tablAe.screenCenter(X);
+    tablAe.scrollFactor.set(0.12, 0.12);
+    tablAe.y += 245;
+    add(tablAe);
 
     vhs = new VHS();
     vhs.uFrame.value = [1];
@@ -83,12 +85,51 @@ class FinalityMenu extends MusicBeatState
     {
       final name:String = items[i];
 
-      var blackfuck:MenuSprite = new MenuSprite('monitors/${name}BlackNaebal');
-      blackfuck.scrollFactor.set(0.12, 0.12);
-      blackfuck.shader = new finality.shaders.WhiteOverlay();
-      add(blackfuck);
-
       var details:MenuSprite = new MenuSprite('monitors/${name}Details');
+
+      var itemText:MenuSprite = new MenuSprite('monitors/${name}Text');
+      itemText.scrollFactor.set(0.12, 0.12);
+      itemText.alpha = (started ? .6 : .001);
+      itemText.shader = vhs;
+
+      var pos:FlxPoint = new FlxPoint();
+      var hitbox:FlxSprite = new FlxSprite();
+
+      switch (name)
+      {
+        case "worlds":
+          pos.set(400, -25);
+
+          hitbox.makeGraphic(128, 117, FlxColor.TRANSPARENT);
+          hitbox.setPosition(400, 100);
+        case "extras":
+          pos.set(395, 275);
+
+          hitbox.makeGraphic(183, 124, FlxColor.TRANSPARENT);
+          hitbox.setPosition(395, 275);
+        case "options":
+          pos.set(725, 240);
+
+          hitbox.makeGraphic(116, 131, FlxColor.TRANSPARENT);
+          hitbox.setPosition(725, 240);
+        case "credits":
+          pos.set(625, 100);
+
+          hitbox.makeGraphic(132, 121, FlxColor.TRANSPARENT);
+          hitbox.setPosition(625, 105);
+      }
+
+      hitbox.scrollFactor.set(0.12, 0.12);
+      hitbox.alpha = 0;
+      hitbox.visible = false;
+
+      var item:MenuSprite = new MenuSprite('monitors/$name');
+      item.setPosition(pos.x, pos.y);
+      item.scrollFactor.set(0.12, 0.12);
+      if (details != null) details.setPosition(item.x, item.y);
+      itemText.setPosition(item.x, item.y);
+      add(item);
+
       if (!ClientPrefs.data.lowQuality)
       {
         details.scrollFactor.set(0.12, 0.12);
@@ -101,65 +142,13 @@ class FinalityMenu extends MusicBeatState
         remove(details);
         details = null;
       }
-
-      var itemText:MenuSprite = new MenuSprite('monitors/${name}Text');
-      itemText.scrollFactor.set(0.12, 0.12);
-      itemText.alpha = (started ? .6 : .001);
-      itemText.shader = vhs;
       add(itemText);
-
-      var adding:MenuSprite = new MenuSprite('monitors/${name}BlackNaebal');
-      adding.scrollFactor.set(0.12, 0.12);
-      adding.shader = vhs;
-      adding.blend = ADD;
-      add(adding);
-
-      var pos:FlxPoint = new FlxPoint();
-      var hitbox:FlxSprite = new FlxSprite();
-
-      switch (name)
-      {
-        case "worlds":
-          pos.set(435, 0);
-
-          hitbox.makeGraphic(128, 117, FlxColor.TRANSPARENT);
-          hitbox.setPosition(438, 121);
-        case "extras":
-          pos.set(405, 260);
-
-          hitbox.makeGraphic(183, 124, FlxColor.TRANSPARENT);
-          hitbox.setPosition(410, 290);
-        case "options":
-          pos.set(707, 220);
-
-          hitbox.makeGraphic(116, 131, FlxColor.TRANSPARENT);
-          hitbox.setPosition(707 + 71, 227);
-        case "credits":
-          pos.set(687.5, 132.5);
-
-          hitbox.makeGraphic(79, 80, FlxColor.TRANSPARENT);
-          hitbox.setPosition(687.5 + 34, 132.5 + 7);
-      }
-
-      hitbox.scrollFactor.set(0.12, 0.12);
-      hitbox.alpha = 0;
-      hitbox.visible = false;
-
-      var item:MenuSprite = new MenuSprite('monitors/$name');
-      item.setPosition(pos.x, pos.y);
-      item.scrollFactor.set(0.12, 0.12);
-      blackfuck.setPosition(item.x, item.y);
-      adding.setPosition(item.x, item.y);
-      if (details != null) details.setPosition(item.x, item.y);
-      itemText.setPosition(item.x, item.y);
-      add(item);
 
       add(hitbox);
 
       itemsSprDat.push(
         {
           name: name,
-          blackfuck: blackfuck,
           details: (details == null ? null : details),
           text: itemText,
           hitbox: hitbox,
@@ -172,13 +161,19 @@ class FinalityMenu extends MusicBeatState
       if (itemsSprDat[i].details != null) glitch(itemsSprDat[i].details);
     }
 
+    var pc1:MenuSprite = new MenuSprite('pc_ps');
+    pc1.screenCenter(X);
+    pc1.y += (230 - 25);
+    pc1.scrollFactor.set(0.12, 0.12);
+    add(pc1);
+
     var bgPC:MenuSprite = new MenuSprite('pcBG');
     bgPC.scrollFactor.set(0.12, 0.12);
     bgPC.shader = vhs;
     bgPC.color = (!started ? FlxColor.BLACK : FlxColor.WHITE);
     add(bgPC);
 
-    var animText:FlxSprite = new FlxSprite(555, 272.5 - (10 + 25 + (!started ? 40 : 0))).loadGraphic(Paths.image('mainmenu/finalityAnim'), true, 1000, 1000);
+    var animText:FlxSprite = new FlxSprite(535, 280.5 - (10 + 25 + (!started ? 40 : 0))).loadGraphic(Paths.image('mainmenu/finalityAnim'), true, 1000, 1000);
     animText.animation.add("idle", [0, 1, 2, 3], 6, true);
     animText.animation.play('idle');
     animText.scale.set(.19, .19);
@@ -208,9 +203,17 @@ class FinalityMenu extends MusicBeatState
       add(body);
 
       var coke:MenuSprite = new MenuSprite('coke');
-      coke.setPosition(245 + 10, 365 - (10 + 25));
+      coke.setPosition(245 + 10, 365 - 60);
       coke.scrollFactor.set(0.12, 0.12);
       add(coke);
+
+      var overlay:MenuSprite = new MenuSprite('overlay');
+      overlay.scrollFactor.set(0.25, 0.25);
+      overlay.setGraphicSize(overlay.width * 1.5);
+      overlay.updateHitbox();
+      overlay.x -= 10;
+      overlay.y -= 10;
+      add(overlay);
     }
 
     super.create();
@@ -281,7 +284,7 @@ class FinalityMenu extends MusicBeatState
     }
 
     sharpTest = new SharpEffect();
-    sharpTest.intensity = .4;
+    sharpTest.intensity = .25;
 
     bloomTest = new Bloom();
     bloomTest.rgba =
@@ -289,7 +292,7 @@ class FinalityMenu extends MusicBeatState
         r: 170,
         g: 177,
         b: 232,
-        a: 210
+        a: 242
       };
     FlxG.camera.filters = [new ShaderFilter(bloomTest.shader), new ShaderFilter(sharpTest.shader)];
     FlxG.signals.postDraw.add(postDraw);
@@ -313,8 +316,8 @@ class FinalityMenu extends MusicBeatState
 
     bloomTest.pos =
       {
-        x: (-FlxG.camera.scroll.x * 1.7 + 495) / FlxG.width * requestedZoom,
-        y: (-FlxG.camera.scroll.y * 1.2 + 100) / FlxG.height * requestedZoom
+        x: (-FlxG.camera.scroll.x * 1.15 + 500) / FlxG.width * requestedZoom,
+        y: (-FlxG.camera.scroll.y * 1.15 + 111) / FlxG.height * requestedZoom
       }
   }
 
@@ -394,13 +397,6 @@ class FinalityMenu extends MusicBeatState
 
           IntervalShake.shake(itemsSprDat[i].text, 0.15, 0.02, 0.01, 0, FlxEase.quadOut);
 
-          if (whiteTween[i] != null) whiteTween[i].cancel();
-
-          itemsSprDat[i].blackfuck.shader.data.progress.value = [0.25];
-          whiteTween[i] = FlxTween.num(0.25, 0., 0.4, {ease: FlxEase.quadInOut}, (t:Float) -> {
-            itemsSprDat[i].blackfuck.shader.data.progress.value[0] = t;
-          });
-
           curSelected = i;
 
           FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -450,13 +446,6 @@ class FinalityMenu extends MusicBeatState
     if (IntervalShake.isShaking(itemsSprDat[index].text)) IntervalShake.stopShaking(itemsSprDat[index].text);
 
     IntervalShake.shake(itemsSprDat[index].text, 1, 0.07, 0.03, 0, FlxEase.quadInOut);
-
-    if (whiteTween[index] != null) whiteTween[index].cancel();
-
-    itemsSprDat[index].blackfuck.shader.data.progress.value = [0.7];
-    whiteTween[index] = FlxTween.num(0.7, 0., 0.4, {ease: FlxEase.quadInOut}, (t:Float) -> {
-      itemsSprDat[index].blackfuck.shader.data.progress.value[0] = t;
-    });
 
     if (body != null) remove(body);
 
