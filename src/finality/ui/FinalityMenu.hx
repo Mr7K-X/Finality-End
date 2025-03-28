@@ -61,9 +61,15 @@ class FinalityMenu extends MusicBeatState
       add(upper);
     }
 
-    var screens:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/screens'));
-    screens.scrollFactor.set(0.08, 0.08);
+    var screens:FlxSprite = new FlxSprite(-140);
+    screens.y = -90;
+    screens.frames = Paths.getSparrowAtlas('mainmenu/screens');
+    screens.animation.addByPrefix('screens', 'screens', 24, true);
+    screens.animation.play('screens');
+    screens.antialiasing = ClientPrefs.data.antialiasing;
+    screens.updateHitbox();
     screens.alpha = (started ? 1 : 0.001);
+    screens.scrollFactor.set(0.12, 0.12);
     add(screens);
 
     var table:MenuSprite = new MenuSprite('table');
@@ -210,7 +216,7 @@ class FinalityMenu extends MusicBeatState
 
       var overlay:MenuSprite = new MenuSprite('overlay');
       overlay.scrollFactor.set(0.25, 0.25);
-      overlay.setGraphicSize(overlay.width * 1.5);
+      overlay.setGraphicSize(overlay.width * 1);
       overlay.updateHitbox();
       overlay.x -= 10;
       overlay.y -= 10;
