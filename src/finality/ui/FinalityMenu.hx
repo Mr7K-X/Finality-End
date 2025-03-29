@@ -6,7 +6,6 @@ import flixel.tweens.misc.NumTween;
 import psych.options.OptionsState;
 import finality.util.EaseUtil;
 import finality.effects.IntervalShake;
-import finality.shaders.VHS;
 import openfl.filters.ShaderFilter;
 import finality.shaders.Bloom;
 import finality.util.MathUtil;
@@ -31,7 +30,6 @@ class FinalityMenu extends MusicBeatState
   var tableZone:FlxSprite;
   var bloomTest:Bloom;
   var sharpTest:SharpEffect;
-  var vhs:VHS;
   var body:MenuSprite;
   var vcrEffect:VcrGlitchEffect;
 
@@ -84,10 +82,6 @@ class FinalityMenu extends MusicBeatState
     tablAe.y += 245;
     add(tablAe);
 
-    vhs = new VHS();
-    vhs.uFrame.value = [1];
-    vhs.uInterlace.value = [1.0];
-
     for (i in 0...items.length)
     {
       final name:String = items[i];
@@ -97,7 +91,6 @@ class FinalityMenu extends MusicBeatState
       var itemText:MenuSprite = new MenuSprite('monitors/${name}Text');
       itemText.scrollFactor.set(0.12, 0.12);
       itemText.alpha = (started ? .6 : .001);
-      itemText.shader = vhs;
 
       var pos:FlxPoint = new FlxPoint();
       var hitbox:FlxSprite = new FlxSprite();
@@ -141,7 +134,6 @@ class FinalityMenu extends MusicBeatState
       {
         details.scrollFactor.set(0.12, 0.12);
         details.visible = false;
-        details.shader = vhs;
         add(details);
       }
       else
@@ -184,7 +176,6 @@ class FinalityMenu extends MusicBeatState
 
     var bgPC:MenuSprite = new MenuSprite('pcBG');
     bgPC.scrollFactor.set(0.12, 0.12);
-    bgPC.shader = vhs;
     bgPC.color = (!started ? FlxColor.BLACK : FlxColor.WHITE);
     add(bgPC);
 
@@ -193,7 +184,6 @@ class FinalityMenu extends MusicBeatState
     animText.animation.play('idle');
     animText.scale.set(.155, .155);
     animText.updateHitbox();
-    animText.shader = vhs;
     animText.alpha = (started ? 1 : 0.001);
     animText.scrollFactor.set(0.12, 0.12);
     add(animText);
