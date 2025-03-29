@@ -166,6 +166,14 @@ class FinalityMenu extends MusicBeatState
     for (i in 0...itemsSprDat.length)
     {
       if (itemsSprDat[i].details != null) glitch(itemsSprDat[i].details);
+
+      if (itemsSprDat[i].name == 'credits')
+      {
+        remove(itemsSprDat[i].monitor);
+        remove(itemsSprDat[i].text);
+
+        if (itemsSprDat[i].details != null) remove(itemsSprDat[i].details);
+      }
     }
 
     var pc1:MenuSprite = new MenuSprite('pc_ps');
@@ -196,6 +204,16 @@ class FinalityMenu extends MusicBeatState
     pc.scrollFactor.set(0.12, 0.12);
     bgPC.setPosition(pc.x, pc.y);
     add(pc);
+
+    for (i in 0...itemsSprDat.length)
+    {
+      if (itemsSprDat[i].name == 'credits')
+      {
+        add(itemsSprDat[i].monitor);
+        if (itemsSprDat[i].details != null) add(itemsSprDat[i].details);
+        add(itemsSprDat[i].text);
+      }
+    }
 
     var head:MenuSprite = new MenuSprite('head');
     head.setPosition(852.5 + 10, 340 - 25);
