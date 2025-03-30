@@ -10,6 +10,7 @@ import openfl.filters.ShaderFilter;
 import finality.shaders.Bloom;
 import finality.util.MathUtil;
 import finality.util.SoundUtil;
+import finality.shaders.VignetteShader;
 
 // TODO: NEW MAIN MENU
 class FinalityMenu extends MusicBeatState
@@ -50,14 +51,6 @@ class FinalityMenu extends MusicBeatState
     var bg:MenuSprite = new MenuSprite('bg');
     bg.scrollFactor.set(0.07, 0.07);
     add(bg);
-
-    if (!ClientPrefs.data.lowQuality)
-    {
-      var upper:MenuSprite = new MenuSprite('upper');
-      upper.setPosition(700, 100);
-      upper.scrollFactor.set(0.07, 0.07);
-      add(upper);
-    }
 
     var screens:FlxSprite = new FlxSprite(-140);
     screens.y = -90;
@@ -167,6 +160,11 @@ class FinalityMenu extends MusicBeatState
         if (itemsSprDat[i].details != null) remove(itemsSprDat[i].details);
       }
     }
+
+    var upper:MenuSprite = new MenuSprite('upper');
+    upper.setPosition(700, 100);
+    upper.scrollFactor.set(0.07, 0.07);
+    add(upper);
 
     var pc1:MenuSprite = new MenuSprite('pc_ps');
     pc1.screenCenter(X);
@@ -315,7 +313,8 @@ class FinalityMenu extends MusicBeatState
     if (ClientPrefs.data.shaders)
     {
       vcrEffect = new VcrGlitchEffect();
-      FlxG.camera.setFilters([new ShaderFilter(vcrEffect.shader)]);
+      var s = new VignetteShader();
+      FlxG.camera.setFilters([new ShaderFilter(s), new ShaderFilter(vcrEffect.shader)]);
     }
   }
 
@@ -486,7 +485,7 @@ class FinalityMenu extends MusicBeatState
         FlxTween.tween(FlxG.camera, {angle: -1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "credits":
         nextState = new CreditsVideo();
-        scrolling.set(1054, -1319);
+        scrolling.set(650, -1319);
         FlxTween.tween(FlxG.camera, {angle: 1.5}, 0.55, {ease: FlxEase.cubeOut, startDelay: 0.2});
       case "options":
         nextState = new OptionsState();
