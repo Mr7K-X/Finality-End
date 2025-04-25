@@ -698,10 +698,25 @@ class CharacterEditorState extends MusicBeatState
     };
 
     positionXStepper = new FlxUINumericStepper(flipXCheckBox.x + 110, flipXCheckBox.y, 10, character.positionArray[0], -9000, 9000, 0);
+    positionXStepper.onCallback = (f:Float) -> {
+      character.positionArray[0] = f;
+      updateCharacterPositions();
+    };
     positionYStepper = new FlxUINumericStepper(positionXStepper.x + 60, positionXStepper.y, 10, character.positionArray[1], -9000, 9000, 0);
-
+    positionYStepper.onCallback = (f:Float) -> {
+      character.positionArray[1] = f;
+      updateCharacterPositions();
+    };
     positionCameraXStepper = new FlxUINumericStepper(positionXStepper.x, positionXStepper.y + 40, 10, character.cameraPosition[0], -9000, 9000, 0);
+    positionCameraXStepper.onCallback = (f:Float) -> {
+      character.cameraPosition[0] = f;
+      updatePointerPos();
+    };
     positionCameraYStepper = new FlxUINumericStepper(positionYStepper.x, positionYStepper.y + 40, 10, character.cameraPosition[1], -9000, 9000, 0);
+    positionCameraYStepper.onCallback = (f:Float) -> {
+      character.cameraPosition[1] = f;
+      updatePointerPos();
+    };
 
     var saveCharacterButton:FlxButton = new FlxButton(reloadImage.x, noAntialiasingCheckBox.y + 40, "Save Character", function() {
       var json:Dynamic =

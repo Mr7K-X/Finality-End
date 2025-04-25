@@ -1163,11 +1163,27 @@ class ChartingState extends MusicBeatState
     var text:FlxText = new FlxText(20, 90, 0, "Value 1:");
     tab_group_event.add(text);
     value1InputText = new FlxUIInputText(20, 110, 100, "");
+    /*
+      value1InputText.callback = (str:String, act:String) -> {
+        if (curSelectedNote[1][curEventSelected] != null)
+        {
+          curSelectedNote[1][curEventSelected][1] = str;
+          updateGrid();
+        }
+    };*/
     blockPressWhileTypingOn.push(value1InputText);
 
     var text:FlxText = new FlxText(20, 130, 0, "Value 2:");
     tab_group_event.add(text);
     value2InputText = new FlxUIInputText(20, 150, 100, "");
+    /*
+      value2InputText.callback = (str:String, act:String) -> {
+        if (curSelectedNote[1][curEventSelected] != null)
+        {
+          curSelectedNote[1][curEventSelected][2] = str;
+          updateGrid();
+        }
+    };*/
     blockPressWhileTypingOn.push(value2InputText);
 
     // New event buttons

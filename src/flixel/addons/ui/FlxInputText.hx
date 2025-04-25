@@ -1,9 +1,9 @@
 package flixel.addons.ui;
 
-import lime.system.Clipboard;
-import flash.errors.Error;
-import flash.events.KeyboardEvent;
-import flash.geom.Rectangle;
+import systools.Clipboard;
+import openfl.errors.Error;
+import openfl.events.KeyboardEvent;
+import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUI.NamedString;
 import flixel.math.FlxRect;
 import flixel.text.FlxText;
@@ -216,6 +216,11 @@ class FlxInputText extends FlxText
     caret.makeGraphic(caretWidth, Std.int(size + 2));
     _caretTimer = new FlxTimer();
 
+    callback = (str:String, cal:String) ->
+      {
+        // nothing fuck
+      };
+
     caretIndex = 0;
     hasFocus = false;
     if (background)
@@ -341,7 +346,7 @@ class FlxInputText extends FlxText
       if (key == 67 && e.ctrlKey)
       {
       #end
-        Clipboard.text = text;
+        Clipboard.setText(text);
 
         onChange(COPY_ACTION);
 
@@ -357,7 +362,7 @@ class FlxInputText extends FlxText
       if (key == 86 && e.ctrlKey)
       {
       #end
-        var newText:String = filter(Clipboard.text);
+        var newText:String = filter(Clipboard.getText());
 
         if (newText.length > 0 && (maxLength == 0 || (text.length + newText.length) < maxLength))
         {
@@ -380,7 +385,7 @@ class FlxInputText extends FlxText
       if (key == 88 && e.ctrlKey)
       {
       #end
-        Clipboard.text = text;
+        Clipboard.setText(text);
         text = '';
         caretIndex = 0;
         onChange(INPUT_ACTION);
