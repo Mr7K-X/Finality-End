@@ -63,9 +63,14 @@ class InitState extends FlxState
     FlxTransitionableState.skipNextTransIn = true;
     FlxTransitionableState.skipNextTransOut = true;
 
-    new FlxTimer().start(1, (_) -> {
-      FlxG.switchState(() -> new FinalityMenu());
-    });
+    new FlxTimer().start(1, (_) ->
+      {
+        #if FEATURE_ONLY_ME
+        FlxG.switchState(() -> new psych.states.debug.ChartEditorState());
+        #else
+        FlxG.switchState(() -> new FinalityMenu());
+        #end
+      });
   }
 
   override function update(elapsed:Float):Void

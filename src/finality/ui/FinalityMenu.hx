@@ -368,6 +368,11 @@ class FinalityMenu extends MusicBeatState
 
         FlxG.switchState(() -> new psych.states.editors.MasterEditorMenu());
       }
+
+      if (FlxG.keys.justPressed.INSERT)
+      {
+        FlxG.switchState(() -> new psych.states.debug.ChartEditorState());
+      }
       #end
 
       FlxG.mouse.visible = true;

@@ -142,35 +142,40 @@ class HealthIcon extends FlxSprite
     }
   }
 
+  public var autoAdjustOffset:Bool = true;
+
   override function updateHitbox()
   {
     super.updateHitbox();
 
-    if (data != null)
+    if (autoAdjustOffset)
     {
-      if (animation != null && animation.curAnim != null)
+      if (data != null)
       {
-        if (animation.exists('idle') && animation.curAnim.name == "idle")
+        if (animation != null && animation.curAnim != null)
         {
-          offset.x = data.animationsOffsets.idle[0];
-          offset.y = data.animationsOffsets.idle[1];
-        }
-        else if (animation.exists('lose') && animation.curAnim.name == "lose")
-        {
-          offset.x = (data.animationsOffsets.lose != null ? data.animationsOffsets.lose[0] : data.animationsOffsets.idle[0]);
-          offset.y = (data.animationsOffsets.lose != null ? data.animationsOffsets.lose[1] : data.animationsOffsets.idle[1]);
-        }
-        else if (animation.exists('win') && animation.curAnim.name == "win")
-        {
-          offset.x = (data.animationsOffsets.win != null ? data.animationsOffsets.win[0] : data.animationsOffsets.idle[0]);
-          offset.y = (data.animationsOffsets.win != null ? data.animationsOffsets.win[1] : data.animationsOffsets.idle[1]);
+          if (animation.exists('idle') && animation.curAnim.name == "idle")
+          {
+            offset.x = data.animationsOffsets.idle[0];
+            offset.y = data.animationsOffsets.idle[1];
+          }
+          else if (animation.exists('lose') && animation.curAnim.name == "lose")
+          {
+            offset.x = (data.animationsOffsets.lose != null ? data.animationsOffsets.lose[0] : data.animationsOffsets.idle[0]);
+            offset.y = (data.animationsOffsets.lose != null ? data.animationsOffsets.lose[1] : data.animationsOffsets.idle[1]);
+          }
+          else if (animation.exists('win') && animation.curAnim.name == "win")
+          {
+            offset.x = (data.animationsOffsets.win != null ? data.animationsOffsets.win[0] : data.animationsOffsets.idle[0]);
+            offset.y = (data.animationsOffsets.win != null ? data.animationsOffsets.win[1] : data.animationsOffsets.idle[1]);
+          }
         }
       }
-    }
-    else
-    {
-      offset.x = iconOffsets[0];
-      offset.y = iconOffsets[1];
+      else
+      {
+        offset.x = iconOffsets[0];
+        offset.y = iconOffsets[1];
+      }
     }
   }
 

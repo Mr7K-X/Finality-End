@@ -33,7 +33,7 @@ class PsychUIButton extends FlxSpriteGroup
       bgAlpha: 1
     };
 
-  public function new(x:Float = 0, y:Float = 0, label:String = '', ?onClick:Void->Void = null, ?wid:Int = 80, ?hei:Int = 20)
+  public function new(x:Float = 0, y:Float = 0, label:String = '', ?onClick:Void->Void = null, ?wid:Float = 80, ?hei:Float = 20)
   {
     super(x, y);
     bg = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
@@ -101,7 +101,7 @@ class PsychUIButton extends FlxSpriteGroup
     }
   }
 
-  public function resize(width:Int, height:Int)
+  public function resize(width:Float, height:Float)
   {
     bg.setGraphicSize(width, height);
     bg.updateHitbox();

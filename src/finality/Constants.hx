@@ -29,7 +29,7 @@ class Constants
    * The title of the game, for debug printing purposes.
    * Change this if you're making an engine.
    */
-  public static final TITLE:String = "Finality End";
+  public static final TITLE:String = "FENA";
 
   /**
    * 2nd engine of this mod

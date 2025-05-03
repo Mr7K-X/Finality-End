@@ -129,9 +129,9 @@ class MusicBeatState extends FlxUIState
     if (curSection > lastSection) sectionHit();
   }
 
-  private function updateBeat():Void
+  private function updateBeat(?newStep:Null<Int> = null):Void
   {
-    curBeat = Math.floor(curStep / 4);
+    curBeat = Math.floor((newStep != null ? newStep : curStep) / 4);
     curDecBeat = curDecStep / 4;
   }
 

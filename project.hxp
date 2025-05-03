@@ -68,6 +68,8 @@ class Project extends HXProject
    */
   static final FEATURE_DEBUG_TRACY:FeatureFlag = "FEATURE_DEBUG_TRACY";
 
+  static final FEATURE_ONLY_ME:FeatureFlag = "FEATURE_ONLY_ME";
+
   /**
    * `-DFEATURE_GIT_TRACE`
    * If this flag is enabled, git info (from `GitCommit.hx`) will push in command line.
