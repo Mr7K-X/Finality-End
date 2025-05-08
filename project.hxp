@@ -266,6 +266,10 @@ class Project extends HXProject
 
     if (!this.debug) setHaxedef("NAPE_RELEASE_BUILD");
 
+    if(!this.debug) {
+    setHaxedef("FLX_NO_DEBUG ");
+    }
+
     if (DISCORD_ALLOWED.isEnabled(this)) setHaxedef("DISCORD_DISABLE_IO_THREAD");
 
     if (LUA_ALLOWED.isEnabled(this)) setHaxedef("LINC_LUA_RELATIVE_DYNAMIC_LIB");
