@@ -9,7 +9,7 @@ import psych.substates.StickerSubState;
 
 class OptionsState extends MusicBeatState
 {
-  var options:Array<String> = ['Note Colors', 'Controls', 'Graphics', 'Visuals and UI', 'Gameplay'];
+  var options:Array<String> = ['Controls', 'Graphics', 'Visuals and UI', 'Gameplay'];
   private var grpOptions:FlxTypedGroup<Alphabet>;
 
   private static var curSelected:Int = 0;
@@ -19,10 +19,9 @@ class OptionsState extends MusicBeatState
 
   function openSelectedSubstate(label:String)
   {
+    persistentUpdate = false;
     switch (label)
     {
-      case 'Note Colors':
-        openSubState(new psych.options.NotesSubState());
       case 'Controls':
         openSubState(new psych.options.ControlsSubState());
       case 'Graphics':
@@ -114,6 +113,7 @@ class OptionsState extends MusicBeatState
   override function closeSubState()
   {
     super.closeSubState();
+    persistentUpdate = true;
     ClientPrefs.saveSettings();
     #if DISCORD_ALLOWED
     DiscordClient.instance.changePresence({details: "Options Menu"});

@@ -16,32 +16,6 @@ class VisualsUISubState extends BaseOptionsMenu
     title = 'Visuals and UI';
     rpcTitle = 'Visuals & UI Settings Menu'; // for Discord Rich Presence
 
-    // for note skins
-    notes = new FlxTypedGroup<StrumNote>();
-    for (i in 0...Note.colArray.length)
-    {
-      var note:StrumNote = new StrumNote(370 + (560 / Note.colArray.length) * i, -200, i, 0);
-      note.centerOffsets();
-      note.centerOrigin();
-      note.playAnim('static');
-      notes.add(note);
-    }
-
-    // options
-
-    var noteSkins:Array<String> = Mods.mergeAllTextsNamed('images/noteSkins/list.txt');
-    if (noteSkins.length > 0)
-    {
-      if (!noteSkins.contains(ClientPrefs.data.noteSkin))
-        ClientPrefs.data.noteSkin = ClientPrefs.defaultData.noteSkin; // Reset to default if saved noteskin couldnt be found
-
-      noteSkins.insert(0, ClientPrefs.defaultData.noteSkin); // Default skin always comes first
-      var option:Option = new Option('Note Skins:', "Select your prefered Note skin.", 'noteSkin', 'string', noteSkins);
-      addOption(option);
-      option.onChange = onChangeNoteSkin;
-      noteOptionID = optionsArray.length - 1;
-    }
-
     var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
     if (noteSplashes.length > 0)
     {
